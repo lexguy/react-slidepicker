@@ -1,13 +1,14 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-01-09 17:24:27
+ * @LastEditTime: 2021-01-14 16:22:56
  * @LastEditors: xuwei
  * @Description:
  */
-import React, { useState } from "react";
+import { render } from "@testing-library/react";
+import React, { Component, useState } from "react";
 
-interface Props {
+interface IProps {
   list: object[];
   itemHeight: number; // per item height
   visibleNum: number; // visible lins
@@ -24,62 +25,78 @@ interface Props {
   inparindex?: number;
   done: (a: number, b: number) => void;
 }
+interface State {
+  offsetY: number;
+}
 
-let initOff = 0;
-let wrapOffset = 0; //每次手势结束后计算 div 基于初始位置的偏移
-
-export function SingleSlide(props: Props) {
-  const [offsetY, setOffsetY] = useState(0);
-  function onStart(event: React.TouchEvent) {
-    const touchY = event.touches[0].pageY;
-    initOff = touchY;
-    console.info("Init", initOff);
+export class SingleSlide extends React.Component<IProps> {
+  initOff: number;
+  wrapOffset: number;
+  state: State;
+  constructor(props: IProps) {
+    super(props);
+    this.initOff = 0;
+    this.wrapOffset = 0; //每次手势结束后计算 div 基于初始位置的偏移
+    this.state = { offsetY: 0 };
   }
-  function onMoving(event: React.TouchEvent) {
+
+  /** ----------------------------------- Touch ----------------------------------------- */
+  onStart = (event: React.TouchEvent) => {
     const touchY = event.touches[0].pageY;
-    const transY = touchY - initOff + wrapOffset;
-    setOffsetY(transY);
+    this.initOff = touchY;
+    console.info("Init", this.initOff);
+  };
+  onMoving = (event: React.TouchEvent) => {
+    const touchY = event.touches[0].pageY;
+    const transY = touchY - this.initOff + this.wrapOffset;
+    this.setState({ offsetY: transY });
     console.info("-------------------------------");
     console.info("ING--touchY", touchY);
-    console.info("ING--initOff", initOff);
+    console.info("ING--initOff", this.initOff);
     console.info("ING--transY", transY);
-  }
-  function onMoveEnd(event: React.TouchEvent) {
+  };
+  onMoveEnd = (event: React.TouchEvent) => {
     const touchY = event.changedTouches[0].pageY;
-    wrapOffset = wrapOffset + (touchY - initOff);
+    this.wrapOffset = this.wrapOffset + (touchY - this.initOff);
     console.info("END", event);
-    console.info("wrapOffset", wrapOffset);
-  }
-  const {
-    list,
-    itemHeight,
-    visibleNum,
-    activeBgColor,
-    normalBgColor,
-    normalBgOpacity,
-  } = props;
-  return (
-    <div>
+    console.info("wrapOffset", this.wrapOffset);
+  };
+
+  /** ----------------------------------- Render ----------------------------------------- */
+  render() {
+    const {
+      list,
+      itemHeight,
+      visibleNum,
+      activeBgColor,
+      normalBgColor,
+      normalBgOpacity,
+    } = this.props;
+    return (
       <div
-        onTouchMove={onMoving}
-        onTouchStart={onStart}
-        onTouchEnd={onMoveEnd}
-        style={{ transform: `translateY(${offsetY}px)` }}
+        onTouchMove={this.onMoving}
+        onTouchStart={this.onStart}
+        onTouchEnd={this.onMoveEnd}
+        style={{
+          transform: `translateY(${this.state.offsetY}px)`,
+          width: `33.3vw`,
+          display: "inline-block",
+        }}
       >
         {[1, 1, 1, 11, 1].map((item, index) => (
           <div
             key={index}
             style={{
-              width: 100,
+              width: `100%`,
               height: itemHeight,
               marginTop: 1,
               backgroundColor: "#a00",
             }}
           >
-            {index}
+            <span>{index}</span>
           </div>
         ))}
       </div>
-    </div>
-  );
+    );
+  }
 }

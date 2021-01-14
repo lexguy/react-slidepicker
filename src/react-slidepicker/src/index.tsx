@@ -6,13 +6,29 @@ class RePicker extends React.Component {
   }
   render() {
     return (
-      <SingleSlide
-        list={[]}
-        itemHeight={50}
-        inparindex={1}
-        visibleNum={5}
-        done={() => {}}
-      />
+      <div
+        style={{
+          // backgroundColor: "#00c",
+          // width: `33vw`,
+          flexDirection: "row",
+          display: "flex",
+        }}
+      >
+        <SingleSlide
+          list={[]}
+          itemHeight={50}
+          inparindex={1}
+          visibleNum={3}
+          done={() => {}}
+        />
+        <SingleSlide
+          list={[{}, {}]}
+          itemHeight={50}
+          inparindex={1}
+          visibleNum={5}
+          done={() => {}}
+        />
+      </div>
     );
   }
 }
