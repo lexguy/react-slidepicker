@@ -10,8 +10,10 @@ class RePicker extends React.Component {
         style={{
           // backgroundColor: "#00c",
           // width: `33vw`,
+          height: 150,
           flexDirection: "row",
           display: "flex",
+          overflow: "hidden",
         }}
       >
         <SingleSlide
@@ -19,6 +21,13 @@ class RePicker extends React.Component {
           itemHeight={50}
           inparindex={1}
           visibleNum={3}
+          done={() => {}}
+        />
+        <SingleSlide
+          list={[{}, {}]}
+          itemHeight={50}
+          inparindex={1}
+          visibleNum={5}
           done={() => {}}
         />
         <SingleSlide
