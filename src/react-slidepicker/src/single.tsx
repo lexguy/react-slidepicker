@@ -1,11 +1,11 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-01-14 18:22:03
+ * @LastEditTime: 2021-01-15 16:03:29
  * @LastEditors: xuwei
  * @Description:
  */
-import React, { useRef, useState } from "react";
+import React, { CSSProperties, useRef, useState } from "react";
 
 interface IProps {
   list: object[];
@@ -31,9 +31,21 @@ interface ICurrent {
 }
 
 export function SingleSlide(props: IProps) {
+  const {
+    list,
+    itemHeight,
+    visibleNum,
+    activeBgColor,
+    normalBgColor,
+    normalBgOpacity,
+  } = props;
+
   const [offsetY, setOffSetY] = useState(0);
+
   // 保存实例变量的 useRef 的（TS）类型是自定义interface,
   // 绑定到 DOM div 上的时候是 HTMLDivElement
+  // const eventRef = useRef<HTMLDivElement>(null);
+
   let comRef = useRef<ICurrent>({ initOff: 0, wrapOffset: 0 }).current;
 
   /** ----------------------------------- Touch ----------------------------------------- */
@@ -49,45 +61,73 @@ export function SingleSlide(props: IProps) {
   const onMoveEnd = (event: React.TouchEvent) => {
     const touchY = event.changedTouches[0].pageY;
     comRef.wrapOffset = comRef.wrapOffset + (touchY - comRef.initOff);
+    correctPosition();
+  };
+
+  // 拖动结束的时候 位置修正
+  const correctPosition = () => {
+    const isPositive = comRef.wrapOffset > 0;
+    let integer: number = Math.round(Math.abs(comRef.wrapOffset / itemHeight));
+    const postion = isPositive
+      ? integer * itemHeight
+      : -1 * integer * itemHeight;
+    comRef.wrapOffset = postion;
+    setOffSetY(postion);
   };
 
   /** ----------------------------------- Render ----------------------------------------- */
 
-  const {
-    list,
-    itemHeight,
-    visibleNum,
-    activeBgColor,
-    normalBgColor,
-    normalBgOpacity,
-  } = props;
   return (
     <div
+      // ref={eventRef}
       onTouchMove={onMoving}
       onTouchStart={onStart}
       onTouchEnd={onMoveEnd}
-      style={{
-        transform: `translateY(${offsetY}px)`,
-        width: `33.3vw`,
-        display: "inline-block",
-      }}
+      style={{ width: "33.3vw", position: "relative" }}
     >
-      {[1, 1, 1, 11, 1].map((item, index) => (
-        <div
-          key={index}
-          style={{
-            width: `100%`,
-            height: itemHeight,
-            marginTop: 1,
-            backgroundColor: "#a00",
-          }}
-        >
-          <span>{index}</span>
-        </div>
-      ))}
+      <div
+        style={{
+          transform: `translateY(${offsetY}px)`,
+          width: `33.3vw`,
+          display: "inline-block",
+        }}
+      >
+        {[1, 1, 1, 11, 1].map((item, index) => (
+          <span key={index} style={{ ...itemstyle, height: itemHeight }}>
+            {index}
+          </span>
+        ))}
+      </div>
+      <div style={{ ...masktop, height: itemHeight }} />
+      <div style={{ ...maskbot, height: itemHeight }} />
     </div>
   );
 }
+
+const masktop: CSSProperties = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  width: "33.3vw",
+  opacity: 0.6,
+  // width:'',
+  backgroundColor: "#000",
+};
+const maskbot: CSSProperties = {
+  position: "absolute",
+  top: 100,
+  left: 0,
+  width: "33.3vw",
+  opacity: 0.6,
+  // width:'',
+  backgroundColor: "#000",
+};
+const itemstyle: CSSProperties = {
+  width: `100%`,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
 
 // interface State {
 //   offsetY: number;

@@ -37,6 +37,8 @@ class RePicker extends React.Component {
           visibleNum={5}
           done={() => {}}
         />
+
+        <div />
       </div>
     );
   }
