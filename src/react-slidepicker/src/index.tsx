@@ -1,47 +1,60 @@
 import React from "react";
-import { SingleSlide } from "./single";
-class RePicker extends React.Component {
+import { defaultSingleProps, ISingleProps, SingleSlide } from "./single";
+
+interface IPickerProps {
+  itemHeight: number;
+  // list: [];
+  dataSource: object[];
+  pickerStyle: ISingleProps;
+}
+
+const defaultProps = {
+  dataSource: [], //data
+  pickerDeep: 3,
+  onceChange: (arr: []) => {}, // once change callback
+  confirm: (arr: []) => {}, //confirm  send data back
+  cancel: () => {},
+  customHead: null,
+  pickerStyle: defaultSingleProps,
+  headOptions: {},
+};
+
+class RePicker extends React.PureComponent<IPickerProps> {
+  static defaultProps = defaultProps;
   constructor(props: any) {
     super(props);
   }
   render() {
+    const TProps = this.props;
+    const SingleProps = TProps.pickerStyle;
     return (
       <div
         style={{
-          // backgroundColor: "#00c",
-          // width: `33vw`,
-          height: 150,
+          height: SingleProps.visibleNum * SingleProps.itemHeight,
           flexDirection: "row",
           display: "flex",
           overflow: "hidden",
         }}
       >
-        <SingleSlide
-          list={[]}
-          itemHeight={50}
-          inparindex={1}
-          visibleNum={3}
-          done={() => {}}
-        />
-        <SingleSlide
-          list={[{}, {}]}
-          itemHeight={50}
-          inparindex={1}
-          visibleNum={5}
-          done={() => {}}
-        />
-        <SingleSlide
-          list={[{}, {}]}
-          itemHeight={50}
-          inparindex={1}
-          visibleNum={5}
-          done={() => {}}
-        />
+        {[1, 2, 3].map((ele, index) => (
+          <SingleSlide
+            key={index}
+            {...SingleProps}
+            list={this.props.dataSource}
+            inparindex={1}
+            done={() => {}}
+            activeFontColor={"#000"}
+            normalFontColor={"#000"}
+            activeFontSize={20}
+          />
+        ))}
 
         <div />
       </div>
     );
   }
 }
+
+// RePicker.defaultProps = {};
 
 export default { RePicker };

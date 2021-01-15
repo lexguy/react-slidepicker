@@ -1,18 +1,20 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-01-15 16:03:29
+ * @LastEditTime: 2021-01-15 19:20:30
  * @LastEditors: xuwei
  * @Description:
  */
 import React, { CSSProperties, useRef, useState } from "react";
 
-interface IProps {
-  list: object[];
+export interface ISingleProps {
+  // list: object[];
+
   itemHeight: number; // per item height
   visibleNum: number; // visible lins
   // maskLines: 2, //
   activeBgColor?: string;
+  activeBgOpacity?: number;
   // activeBgColor: '#EEE8AA',
   activeFontSize?: number;
   activeFontColor?: string;
@@ -25,23 +27,52 @@ interface IProps {
   done: (a: number, b: number) => void;
 }
 
+export interface ISingleProps {
+  list: object[];
+}
+
 interface ICurrent {
   initOff: number;
   wrapOffset: number;
 }
 
-export function SingleSlide(props: IProps) {
+export const defaultSingleProps = {
+  list: [],
+  itemHeight: 50,
+  visibleNum: 3,
+  activeBgColor: "#fff",
+  activeBgOpacity: 1,
+  activeFontSize: 18,
+  activeFontColor: "#00a",
+  normalBgColor: "#000",
+  normalBgOpacity: 0.5,
+  normalFontSize: 18,
+  normalFontColor: "#0a0",
+  inparindex: 1,
+  done: () => {},
+};
+
+SingleSlide.defaultProps = defaultSingleProps;
+
+export function SingleSlide(props: ISingleProps = defaultSingleProps) {
   const {
     list,
     itemHeight,
     visibleNum,
+    activeFontSize,
+    activeFontColor,
     activeBgColor,
+    activeBgOpacity,
     normalBgColor,
     normalBgOpacity,
+    normalFontSize,
+    normalFontColor,
+    inparindex,
   } = props;
 
   const [offsetY, setOffSetY] = useState(0);
 
+  const unuseNum = (visibleNum - 1) / 2;
   // 保存实例变量的 useRef 的（TS）类型是自定义interface,
   // 绑定到 DOM div 上的时候是 HTMLDivElement
   // const eventRef = useRef<HTMLDivElement>(null);
@@ -77,6 +108,13 @@ export function SingleSlide(props: IProps) {
 
   /** ----------------------------------- Render ----------------------------------------- */
 
+  const maskstyle = {
+    width: "33.3vw",
+    height: unuseNum * itemHeight,
+    opacity: normalBgOpacity,
+    backgroundColor: normalBgColor,
+  };
+
   return (
     <div
       // ref={eventRef}
@@ -87,43 +125,42 @@ export function SingleSlide(props: IProps) {
     >
       <div
         style={{
+          position: "absolute",
           transform: `translateY(${offsetY}px)`,
           width: `33.3vw`,
           display: "inline-block",
         }}
       >
-        {[1, 1, 1, 11, 1].map((item, index) => (
-          <span key={index} style={{ ...itemstyle, height: itemHeight }}>
+        {[1, 2, 2, 2, 2, 2, 2].map((item, index) => (
+          <span
+            key={index}
+            style={{
+              ...itemstyle,
+              height: itemHeight,
+              color: activeFontColor || normalFontColor,
+              fontSize: activeFontSize || normalFontSize, //TODO  区分选中状态设定大小和颜色
+            }}
+          >
             {index}
           </span>
         ))}
       </div>
-      <div style={{ ...masktop, height: itemHeight }} />
-      <div style={{ ...maskbot, height: itemHeight }} />
+      <div style={maskstyle} />
+      <div
+        style={{
+          width: "33.3vw",
+          height: itemHeight,
+          opacity: activeBgOpacity,
+          backgroundColor: activeBgColor,
+        }}
+      />
+      <div style={maskstyle} />
     </div>
   );
 }
 
-const masktop: CSSProperties = {
-  position: "absolute",
-  top: 0,
-  left: 0,
-  width: "33.3vw",
-  opacity: 0.6,
-  // width:'',
-  backgroundColor: "#000",
-};
-const maskbot: CSSProperties = {
-  position: "absolute",
-  top: 100,
-  left: 0,
-  width: "33.3vw",
-  opacity: 0.6,
-  // width:'',
-  backgroundColor: "#000",
-};
 const itemstyle: CSSProperties = {
-  width: `100%`,
+  // width: `100%`,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
