@@ -40,7 +40,8 @@ class RePicker extends React.PureComponent<IPickerProps> {
           <SingleSlide
             key={index}
             {...SingleProps}
-            list={this.props.dataSource}
+            // list={this.props.dataSource}
+            list={[{}, {}, {}, {}]}
             inparindex={1}
             done={() => {}}
             activeFontColor={"#000"}
@@ -54,7 +55,5 @@ class RePicker extends React.PureComponent<IPickerProps> {
     );
   }
 }
-
-// RePicker.defaultProps = {};
 
 export default { RePicker };

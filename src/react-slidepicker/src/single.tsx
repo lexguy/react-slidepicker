@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-01-15 19:20:30
+ * @LastEditTime: 2021-01-16 00:38:51
  * @LastEditors: xuwei
  * @Description:
  */
@@ -70,14 +70,21 @@ export function SingleSlide(props: ISingleProps = defaultSingleProps) {
     inparindex,
   } = props;
 
-  const [offsetY, setOffSetY] = useState(0);
-
   const unuseNum = (visibleNum - 1) / 2;
+  // max min 是  wrapOffset 取值的最大最小值
+  const maxOffset = unuseNum * itemHeight; // 初始偏移,只能向上滑动   向上滑动的时候产生减小的offset
+  const minOfffset = (unuseNum + 1 - list.length) * itemHeight; // 滑到最下面的偏移量
+
+  const [offsetY, setOffSetY] = useState(maxOffset);
+
   // 保存实例变量的 useRef 的（TS）类型是自定义interface,
   // 绑定到 DOM div 上的时候是 HTMLDivElement
   // const eventRef = useRef<HTMLDivElement>(null);
 
-  let comRef = useRef<ICurrent>({ initOff: 0, wrapOffset: 0 }).current;
+  let comRef = useRef<ICurrent>({
+    initOff: maxOffset,
+    wrapOffset: maxOffset,
+  }).current;
 
   /** ----------------------------------- Touch ----------------------------------------- */
   const onStart = (event: React.TouchEvent) => {
@@ -87,11 +94,22 @@ export function SingleSlide(props: ISingleProps = defaultSingleProps) {
   const onMoving = (event: React.TouchEvent) => {
     const touchY = event.touches[0].pageY;
     const transY = touchY - comRef.initOff + comRef.wrapOffset;
+    if (transY > maxOffset || transY < minOfffset) {
+      return;
+    }
     setOffSetY(transY);
   };
   const onMoveEnd = (event: React.TouchEvent) => {
     const touchY = event.changedTouches[0].pageY;
     comRef.wrapOffset = comRef.wrapOffset + (touchY - comRef.initOff);
+    if (comRef.wrapOffset > maxOffset) {
+      comRef.wrapOffset = maxOffset;
+      return;
+    }
+    if (comRef.wrapOffset < minOfffset) {
+      comRef.wrapOffset = minOfffset;
+      return;
+    }
     correctPosition();
   };
 
@@ -131,7 +149,7 @@ export function SingleSlide(props: ISingleProps = defaultSingleProps) {
           display: "inline-block",
         }}
       >
-        {[1, 2, 2, 2, 2, 2, 2].map((item, index) => (
+        {list.map((item, index) => (
           <span
             key={index}
             style={{
