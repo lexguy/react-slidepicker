@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-01-16 00:38:51
+ * @LastEditTime: 2021-01-18 18:35:34
  * @LastEditors: xuwei
  * @Description:
  */
@@ -15,7 +15,6 @@ export interface ISingleProps {
   // maskLines: 2, //
   activeBgColor?: string;
   activeBgOpacity?: number;
-  // activeBgColor: '#EEE8AA',
   activeFontSize?: number;
   activeFontColor?: string;
 
@@ -23,7 +22,8 @@ export interface ISingleProps {
   normalBgOpacity?: number;
   normalFontSize?: number;
   normalFontColor?: string;
-  inparindex?: number;
+
+  inparindex: number; // 第几轮
   done: (a: number, b: number) => void;
 }
 
@@ -68,6 +68,7 @@ export function SingleSlide(props: ISingleProps = defaultSingleProps) {
     normalFontSize,
     normalFontColor,
     inparindex,
+    done,
   } = props;
 
   const unuseNum = (visibleNum - 1) / 2;
@@ -76,6 +77,7 @@ export function SingleSlide(props: ISingleProps = defaultSingleProps) {
   const minOfffset = (unuseNum + 1 - list.length) * itemHeight; // 滑到最下面的偏移量
 
   const [offsetY, setOffSetY] = useState(maxOffset);
+  const [checkedIndex, setCheckedIndex] = useState(0);
 
   // 保存实例变量的 useRef 的（TS）类型是自定义interface,
   // 绑定到 DOM div 上的时候是 HTMLDivElement
@@ -99,21 +101,24 @@ export function SingleSlide(props: ISingleProps = defaultSingleProps) {
     }
     setOffSetY(transY);
   };
+
   const onMoveEnd = (event: React.TouchEvent) => {
     const touchY = event.changedTouches[0].pageY;
     comRef.wrapOffset = comRef.wrapOffset + (touchY - comRef.initOff);
     if (comRef.wrapOffset > maxOffset) {
       comRef.wrapOffset = maxOffset;
+      setOffSetAndDataBack(maxOffset, 0);
       return;
     }
     if (comRef.wrapOffset < minOfffset) {
       comRef.wrapOffset = minOfffset;
+      setOffSetAndDataBack(minOfffset, list.length - 1);
       return;
     }
     correctPosition();
   };
 
-  // 拖动结束的时候 位置修正
+  // 拖动结束的时候 计算修正
   const correctPosition = () => {
     const isPositive = comRef.wrapOffset > 0;
     let integer: number = Math.round(Math.abs(comRef.wrapOffset / itemHeight));
@@ -121,7 +126,16 @@ export function SingleSlide(props: ISingleProps = defaultSingleProps) {
       ? integer * itemHeight
       : -1 * integer * itemHeight;
     comRef.wrapOffset = postion;
-    setOffSetY(postion);
+    setOffSetAndDataBack(postion, Math.abs(postion / itemHeight - unuseNum));
+  };
+
+  // 设置选中索引，位置修正并返回选中值
+  const setOffSetAndDataBack = (position: number, checkedIndex: number) => {
+    setCheckedIndex(checkedIndex);
+    setOffSetY(position);
+    if (done) {
+      done(checkedIndex, inparindex);
+    }
   };
 
   /** ----------------------------------- Render ----------------------------------------- */
@@ -132,14 +146,13 @@ export function SingleSlide(props: ISingleProps = defaultSingleProps) {
     opacity: normalBgOpacity,
     backgroundColor: normalBgColor,
   };
-
   return (
     <div
       // ref={eventRef}
       onTouchMove={onMoving}
       onTouchStart={onStart}
       onTouchEnd={onMoveEnd}
-      style={{ width: "33.3vw", position: "relative" }}
+      style={{ width: "33.3vw", position: "relative", ...notouch }}
     >
       <div
         style={{
@@ -155,8 +168,9 @@ export function SingleSlide(props: ISingleProps = defaultSingleProps) {
             style={{
               ...itemstyle,
               height: itemHeight,
-              color: activeFontColor || normalFontColor,
-              fontSize: activeFontSize || normalFontSize, //TODO  区分选中状态设定大小和颜色
+              color: index === checkedIndex ? activeFontColor : normalFontColor,
+              fontSize:
+                index === checkedIndex ? activeFontSize : normalFontSize,
             }}
           >
             {index}
@@ -182,6 +196,15 @@ const itemstyle: CSSProperties = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+};
+
+const notouch: CSSProperties = {
+  userSelect: "none",
+  WebkitUserSelect: "none",
+  MozUserSelect: "none",
+  KhtmlUserSelect: "none",
+  msUserSelect: "none",
+  WebkitTouchCallout: "none",
 };
 
 // interface State {

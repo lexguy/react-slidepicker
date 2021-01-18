@@ -1,3 +1,10 @@
+/*
+ * @Author: xuwei
+ * @Date: 2021-01-08 10:41:34
+ * @LastEditTime: 2021-01-18 18:34:11
+ * @LastEditors: xuwei
+ * @Description:
+ */
 import React from "react";
 import { defaultSingleProps, ISingleProps, SingleSlide } from "./single";
 
@@ -42,11 +49,14 @@ class RePicker extends React.PureComponent<IPickerProps> {
             {...SingleProps}
             // list={this.props.dataSource}
             list={[{}, {}, {}, {}]}
-            inparindex={1}
-            done={() => {}}
-            activeFontColor={"#000"}
-            normalFontColor={"#000"}
-            activeFontSize={20}
+            inparindex={index}
+            done={(a, b) => {
+              console.info("a", a);
+              console.info("b", b);
+            }}
+            // activeFontColor={"#000"}
+            // normalFontColor={"#000"}
+            // activeFontSize={20}
           />
         ))}
 
