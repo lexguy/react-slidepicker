@@ -1,11 +1,17 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-01-18 18:35:34
+ * @LastEditTime: 2021-01-19 18:53:41
  * @LastEditors: xuwei
  * @Description:
  */
-import React, { CSSProperties, useRef, useState } from "react";
+import React, {
+  CSSProperties,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 
 export interface ISingleProps {
   // list: object[];
@@ -52,9 +58,9 @@ export const defaultSingleProps = {
   done: () => {},
 };
 
-SingleSlide.defaultProps = defaultSingleProps;
+// SingleSlide.defaultProps = defaultSingleProps;
 
-export function SingleSlide(props: ISingleProps = defaultSingleProps) {
+function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
   const {
     list,
     itemHeight,
@@ -87,6 +93,14 @@ export function SingleSlide(props: ISingleProps = defaultSingleProps) {
     initOff: maxOffset,
     wrapOffset: maxOffset,
   }).current;
+
+  useEffect(() => {
+    done(0, inparindex);
+  }, []);
+
+  useImperativeHandle(ref, () => ({
+    show: () => console.info("show"),
+  }));
 
   /** ----------------------------------- Touch ----------------------------------------- */
   const onStart = (event: React.TouchEvent) => {
@@ -190,6 +204,8 @@ export function SingleSlide(props: ISingleProps = defaultSingleProps) {
     </div>
   );
 }
+
+export const Slide = React.forwardRef(SingleSlide);
 
 const itemstyle: CSSProperties = {
   // width: `100%`,
