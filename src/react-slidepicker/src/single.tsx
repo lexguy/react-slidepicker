@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-01-19 18:53:41
+ * @LastEditTime: 2021-01-20 16:23:46
  * @LastEditors: xuwei
  * @Description:
  */
@@ -34,7 +34,7 @@ export interface ISingleProps {
 }
 
 export interface ISingleProps {
-  list: object[];
+  list: any[];
 }
 
 interface ICurrent {
@@ -99,7 +99,11 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
   }, []);
 
   useImperativeHandle(ref, () => ({
-    show: () => console.info("show"),
+    resetData: () => {
+      setOffSetY(maxOffset);
+      setCheckedIndex(0);
+      comRef.wrapOffset = maxOffset;
+    },
   }));
 
   /** ----------------------------------- Touch ----------------------------------------- */
@@ -139,16 +143,19 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
     const postion = isPositive
       ? integer * itemHeight
       : -1 * integer * itemHeight;
+    const newIndex = Math.abs(postion / itemHeight - unuseNum);
     comRef.wrapOffset = postion;
-    setOffSetAndDataBack(postion, Math.abs(postion / itemHeight - unuseNum));
+    setOffSetAndDataBack(postion, newIndex);
   };
 
   // 设置选中索引，位置修正并返回选中值
-  const setOffSetAndDataBack = (position: number, checkedIndex: number) => {
-    setCheckedIndex(checkedIndex);
+  const setOffSetAndDataBack = (position: number, newIndex: number) => {
     setOffSetY(position);
-    if (done) {
-      done(checkedIndex, inparindex);
+    if (checkedIndex !== newIndex) {
+      setCheckedIndex(newIndex);
+      if (done) {
+        done(newIndex, inparindex);
+      }
     }
   };
 
@@ -222,78 +229,3 @@ const notouch: CSSProperties = {
   msUserSelect: "none",
   WebkitTouchCallout: "none",
 };
-
-// interface State {
-//   offsetY: number;
-// }
-// export class SingleSlide extends React.Component<IProps> {
-//   initOff: number;
-//   wrapOffset: number;
-//   state: State;
-//   constructor(props: IProps) {
-//     super(props);
-//     this.initOff = 0;
-//     this.wrapOffset = 0; //每次手势结束后计算 div 基于初始位置的偏移
-//     this.state = { offsetY: 0 };
-//   }
-
-//   /** ----------------------------------- Touch ----------------------------------------- */
-//   onStart = (event: React.TouchEvent) => {
-//     const touchY = event.touches[0].pageY;
-//     this.initOff = touchY;
-//     console.info("Init", this.initOff);
-//   };
-//   onMoving = (event: React.TouchEvent) => {
-//     const touchY = event.touches[0].pageY;
-//     const transY = touchY - this.initOff + this.wrapOffset;
-//     this.setState({ offsetY: transY });
-//     console.info("-------------------------------");
-//     console.info("ING--touchY", touchY);
-//     console.info("ING--initOff", this.initOff);
-//     console.info("ING--transY", transY);
-//   };
-//   onMoveEnd = (event: React.TouchEvent) => {
-//     const touchY = event.changedTouches[0].pageY;
-//     this.wrapOffset = this.wrapOffset + (touchY - this.initOff);
-//     console.info("END", event);
-//     console.info("wrapOffset", this.wrapOffset);
-//   };
-
-//   /** ----------------------------------- Render ----------------------------------------- */
-//   render() {
-//     const {
-//       list,
-//       itemHeight,
-//       visibleNum,
-//       activeBgColor,
-//       normalBgColor,
-//       normalBgOpacity,
-//     } = this.props;
-//     return (
-//       <div
-//         onTouchMove={this.onMoving}
-//         onTouchStart={this.onStart}
-//         onTouchEnd={this.onMoveEnd}
-//         style={{
-//           transform: `translateY(${this.state.offsetY}px)`,
-//           width: `33.3vw`,
-//           display: "inline-block",
-//         }}
-//       >
-//         {[1, 1, 1, 11, 1].map((item, index) => (
-//           <div
-//             key={index}
-//             style={{
-//               width: `100%`,
-//               height: itemHeight,
-//               marginTop: 1,
-//               backgroundColor: "#a00",
-//             }}
-//           >
-//             <span>{index}</span>
-//           </div>
-//         ))}
-//       </div>
-//     );
-//   }
-// }
