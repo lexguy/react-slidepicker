@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:34
- * @LastEditTime: 2021-01-20 16:23:33
+ * @LastEditTime: 2021-01-20 17:21:44
  * @LastEditors: xuwei
  * @Description:
  */
@@ -32,21 +32,42 @@ const defaultProps = {
 
 class CascadePicker extends React.PureComponent<IPickerProps> {
   static defaultProps = defaultProps;
-
-  state: {
-    result: [];
-  };
+  // state: {
+  //   result: [];
+  // };
   refArray: React.RefObject<IRef>[];
   result: any[]; //保存已选择的结果,只存 Index
   constructor(props: any) {
     super(props);
     this.state = {
-      result: [],
+      lv1List: [],
+      lv2List: [],
+      lv3List: [],
     };
+    this.result = [];
     this.refArray = [];
     this.initRefArray();
-    this.result = [];
   }
+
+  componentDidMount() {
+    this.dismantleL1Data();
+  }
+
+  /** -----------------------------------  ----------------------------------------- */
+  dismantleL1Data = () => {
+    const { dataSource, pickerDeep } = this.props;
+    const lv1List = [];
+    for (let i = 0; i < dataSource.length; i++) {
+      const element = dataSource[i];
+      const { list, ...lv1Item } = element;
+      lv1List[i] = lv1Item;
+    }
+    this.setState({ lv1List });
+  };
+
+  dismantleL2Data = () => {
+    // const
+  };
 
   /** ----------------------------------- Data ----------------------------------------- */
 
@@ -56,7 +77,6 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
       this.refArray[i] = React.createRef();
     }
   };
-
   setData = (checkedIndex: number, inparindex: number) => {
     this.result[inparindex] = checkedIndex;
     const { pickerDeep } = this.props;
@@ -84,20 +104,23 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
           overflow: "hidden",
         }}
       >
-        {TProps.dataSource.map((ele, index) => (
-          <Slide
-            ref={this.refArray[index]}
-            key={index}
-            {...SingleProps}
-            // list={ele.list}
-            list={[{}, {}, {}, {}]}
-            inparindex={index}
-            done={this.setData}
-            // activeFontColor={"#000"}
-            // normalFontColor={"#000"}
-            // activeFontSize={20}
-          />
-        ))}
+        {TProps.dataSource.map((ele, index) => {
+          console.info("elelist", ele.list);
+          return (
+            <Slide
+              ref={this.refArray[index]}
+              key={index}
+              {...SingleProps}
+              list={ele.list}
+              // list={[{}, {}, {}, {}]}
+              inparindex={index}
+              done={this.setData}
+              // activeFontColor={"#000"}
+              // normalFontColor={"#000"}
+              // activeFontSize={20}
+            />
+          );
+        })}
 
         <div />
       </div>
