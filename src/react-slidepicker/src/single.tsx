@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-01-20 16:23:46
+ * @LastEditTime: 2021-01-21 16:09:02
  * @LastEditors: xuwei
  * @Description:
  */
@@ -187,14 +187,23 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
           <span
             key={index}
             style={{
-              ...itemstyle,
+              display: "inline-block",
+              // margin: 0,
+              // padding: 0,
+              textAlign: "center",
               height: itemHeight,
+              lineHeight: `50px`,
+              width: "100%",
               color: index === checkedIndex ? activeFontColor : normalFontColor,
               fontSize:
                 index === checkedIndex ? activeFontSize : normalFontSize,
+              textOverflow: "ellipsis",
+              overflow: "hidden",
+              whiteSpace: "nowrap",
             }}
           >
-            {index}
+            {/* {index} */}
+            {item.name}
           </span>
         ))}
       </div>
@@ -216,9 +225,9 @@ export const Slide = React.forwardRef(SingleSlide);
 
 const itemstyle: CSSProperties = {
   // width: `100%`,
-  display: "flex",
+  display: "inline-flex",
   alignItems: "center",
-  justifyContent: "center",
+  // justifyContent: "center",
 };
 
 const notouch: CSSProperties = {

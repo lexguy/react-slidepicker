@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:34
- * @LastEditTime: 2021-01-20 17:21:44
+ * @LastEditTime: 2021-01-21 11:44:06
  * @LastEditors: xuwei
  * @Description:
  */
@@ -35,6 +35,11 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
   // state: {
   //   result: [];
   // };
+  state: {
+    lv1List: [];
+    lv2List: [];
+    lv3List: [];
+  };
   refArray: React.RefObject<IRef>[];
   result: any[]; //保存已选择的结果,只存 Index
   constructor(props: any) {
@@ -95,6 +100,8 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
   render() {
     const TProps = this.props;
     const SingleProps = TProps.pickerStyle;
+    const { lv1List, lv2List, lv3List } = this.state;
+    const listArray = [lv1List, lv2List, lv3List];
     return (
       <div
         style={{
@@ -104,14 +111,14 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
           overflow: "hidden",
         }}
       >
-        {TProps.dataSource.map((ele, index) => {
-          console.info("elelist", ele.list);
+        {new Array(TProps.pickerDeep).fill(1).map((ele, index) => {
+          // console.info("elelist", ele.list);
           return (
             <Slide
               ref={this.refArray[index]}
               key={index}
               {...SingleProps}
-              list={ele.list}
+              list={listArray[index]}
               // list={[{}, {}, {}, {}]}
               inparindex={index}
               done={this.setData}

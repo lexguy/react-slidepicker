@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 11:20:53
- * @LastEditTime: 2021-01-20 16:13:45
+ * @LastEditTime: 2021-01-21 14:23:53
  * @LastEditors: xuwei
  * @Description:
  */
@@ -20,7 +20,7 @@ export default function App() {
           itemHeight: 50,
           normalFontColor: "#00a",
           normalFontSize: 15,
-          activeFontSize: 25,
+          activeFontSize: 20,
           activeBgColor: "#fff",
           activeBgOpacity: 1,
           activeFontColor: "#F00",
