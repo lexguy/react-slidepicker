@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-01-22 18:18:40
+ * @LastEditTime: 2021-01-22 22:42:36
  * @LastEditors: xuwei
  * @Description:
  */
@@ -34,6 +34,7 @@ export interface ISingleProps {
 }
 
 export interface ISingleProps {
+  index: number;
   list: any[];
   pickerDeep: number;
 }
@@ -41,10 +42,12 @@ export interface ISingleProps {
 interface ICurrent {
   initOff: number;
   wrapOffset: number;
+  divElement: HTMLDivElement | null;
 }
 
 export const defaultSingleProps = {
   list: [],
+  index: 0,
   itemHeight: 50,
   visibleNum: 3,
   activeBgColor: "#fff",
@@ -65,6 +68,7 @@ export const defaultSingleProps = {
 function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
   const {
     list,
+    index,
     itemHeight,
     visibleNum,
     activeFontSize,
@@ -81,15 +85,13 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
   } = props;
 
   const unuseNum = (visibleNum - 1) / 2;
+  const Width = (100 / pickerDeep).toFixed(1);
+
   // max min 是  wrapOffset 取值的最大最小值
   const maxOffset = unuseNum * itemHeight; // 初始偏移,只能向上滑动   向上滑动的时候产生减小的offset
   const minOfffset = (unuseNum + 1 - list.length) * itemHeight; // 滑到最下面的偏移量
 
-  const [offsetY, setOffSetY] = useState(maxOffset);
   const [checkedIndex, setCheckedIndex] = useState(0);
-
-  const Width = (100 / pickerDeep).toFixed(1);
-  // const Width = 33.3;
 
   // 保存实例变量的 useRef 的（TS）类型是自定义interface,
   // 绑定到 DOM div 上的时候是 HTMLDivElement
@@ -98,25 +100,36 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
   let comRef = useRef<ICurrent>({
     initOff: maxOffset,
     wrapOffset: maxOffset,
+    divElement: null,
   }).current;
 
   useEffect(() => {
     done(0, inparindex);
-  }, []);
+  }, [inparindex, done]);
 
   useEffect(() => {
-    setOffSetY(maxOffset);
+    setAniOffset(maxOffset);
     setCheckedIndex(0);
     comRef.wrapOffset = maxOffset;
+    comRef.divElement = document.querySelector(`#AniDiv${index}`);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [list]);
 
   useImperativeHandle(ref, () => ({
     resetData: () => {
-      setOffSetY(maxOffset);
+      setAniOffset(maxOffset);
       setCheckedIndex(0);
       comRef.wrapOffset = maxOffset;
     },
   }));
+
+  /** ----------------------------------- DOM ----------------------------------------- */
+
+  const setAniOffset = (divOffSet: number) => {
+    if (comRef.divElement) {
+      comRef.divElement.style.transform = `translateY(${divOffSet}px)`;
+    }
+  };
 
   /** ----------------------------------- Touch ----------------------------------------- */
   const onStart = (event: React.TouchEvent) => {
@@ -129,7 +142,7 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
     if (transY > maxOffset || transY < minOfffset) {
       return;
     }
-    setOffSetY(transY);
+    setAniOffset(transY);
   };
 
   const onMoveEnd = (event: React.TouchEvent) => {
@@ -162,7 +175,7 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
 
   // 设置选中索引，位置修正并返回选中值
   const setOffSetAndDataBack = (position: number, newIndex: number) => {
-    setOffSetY(position);
+    setAniOffset(position);
     if (checkedIndex !== newIndex) {
       setCheckedIndex(newIndex);
       if (done) {
@@ -181,16 +194,15 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
   };
   return (
     <div
-      // ref={eventRef}
       onTouchMove={onMoving}
       onTouchStart={onStart}
       onTouchEnd={onMoveEnd}
       style={{ width: `${Width}vw`, position: "relative", ...notouch }}
     >
       <div
+        id={`AniDiv${index}`}
         style={{
           position: "absolute",
-          transform: `translateY(${offsetY}px)`,
           width: `${Width}vw`,
           display: "inline-block",
           overflow: "hidden",

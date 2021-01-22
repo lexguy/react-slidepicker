@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:34
- * @LastEditTime: 2021-01-22 18:36:27
+ * @LastEditTime: 2021-01-22 23:12:04
  * @LastEditors: xuwei
  * @Description:
  */
@@ -14,9 +14,9 @@ interface IRef {
 interface IPickerProps {
   dataSource: any[];
   pickerDeep: number;
-  confirm: () => void;
-  onceChange: () => void;
-  cancel: () => void;
+  confirm: ({}) => void;
+  onceChange: (args: any) => void;
+  cancel: ({}) => void;
   pickerStyle: ISingleProps;
   headOptions: {};
   customHead: {};
@@ -57,7 +57,7 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
 
   /** ----------------------------------- State ----------------------------------------- */
   dismantleL1Data = () => {
-    const { dataSource } = this.props;
+    const { dataSource, pickerDeep, onceChange } = this.props;
     const lv1List = [];
     for (let i = 0; i < dataSource.length; i++) {
       const element = dataSource[i];
@@ -65,31 +65,47 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
       lv1List[i] = lv1Item;
     }
     this.setState({ lv1List });
-    this.dismantleL2Data();
+    if (pickerDeep === 1 && onceChange) {
+      onceChange(lv1List[0]);
+    } else {
+      this.dismantleL2Data();
+    }
   };
 
   dismantleL2Data = () => {
-    // const
+    const { dataSource, pickerDeep, onceChange } = this.props;
+
     this.result[1] = 0;
-    const lv1obj = this.props.dataSource[this.result[0] || 0];
-    if (lv1obj && lv1obj.list && lv1obj.list.length > 0) {
+    const lv1obj = dataSource[this.result[0] || 0];
+    const lv2List = lv1obj.list;
+    if (lv2List && lv2List.length > 0) {
       this.setState({ lv2List: lv1obj.list }, () => {
         this.dismantleL3Data(lv1obj.list);
       });
     } else {
       this.setState({ lv2List: [], lv3List: [] });
     }
+
+    if (pickerDeep === 2 && onceChange) {
+      // onceChange(lv1obj, lv2List[0]);
+    }
   };
 
   dismantleL3Data = (plv2List?: { list: [] }[]) => {
+    const { pickerDeep, onceChange } = this.props;
+
     this.result[2] = 0;
     const lv2List = plv2List || this.state.lv2List;
     const lv2Index = this.result[1];
     const lv2obj: { list: {}[] } = lv2List[lv2Index];
+    const lv3List = lv2obj?.list || [];
     if (lv2obj && lv2obj.list && lv2obj.list.length > 0) {
       this.setState({ lv3List: lv2obj.list });
     } else {
       this.setState({ lv3List: [] });
+    }
+    if (pickerDeep === 3 && onceChange) {
+      onceChange(lv3List[0]);
     }
   };
 
@@ -97,13 +113,30 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
 
   setData = (checkedIndex: number, inparindex: number) => {
     this.result[inparindex] = checkedIndex;
-    if (inparindex === 0) {
+    const { pickerDeep } = this.props;
+    if (inparindex === 0 && pickerDeep > 1) {
       this.dismantleL2Data();
     } else if (inparindex === 1) {
       this.dismantleL3Data();
     }
-    console.info("check", checkedIndex);
-    console.info("inparindex", inparindex);
+    // console.info("check", checkedIndex);
+    // console.info("inparindex", inparindex);
+    // console.info("[]", this.result);
+    // this.props.onceChange && this.props.onceChange();
+    // console.info("", this.bundleData());
+  };
+
+  bundleData = () => {
+    const { pickerDeep } = this.props;
+    const { lv1List, lv2List, lv3List } = this.state;
+    const [r1, r2, r3] = this.result;
+    if (pickerDeep === 1) {
+      return lv1List[r1];
+    } else if (pickerDeep === 2) {
+      return [lv1List[r1], lv2List[r2]];
+    } else {
+      return [lv1List[r1], lv2List[r2], lv3List[r3]];
+    }
   };
 
   /** ----------------------------------- Render ----------------------------------------- */
@@ -128,6 +161,7 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
               {...SingleProps}
               pickerDeep={TProps.pickerDeep}
               list={listArray[index]}
+              index={index}
               inparindex={index}
               done={this.setData}
             />
