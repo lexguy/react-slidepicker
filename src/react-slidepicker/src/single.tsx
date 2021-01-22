@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-01-22 17:24:28
+ * @LastEditTime: 2021-01-22 18:18:40
  * @LastEditors: xuwei
  * @Description:
  */
@@ -35,6 +35,7 @@ export interface ISingleProps {
 
 export interface ISingleProps {
   list: any[];
+  pickerDeep: number;
 }
 
 interface ICurrent {
@@ -56,6 +57,7 @@ export const defaultSingleProps = {
   normalFontColor: "#0a0",
   inparindex: 1,
   done: () => {},
+  pickerDeep: 3,
 };
 
 // SingleSlide.defaultProps = defaultSingleProps;
@@ -75,6 +77,7 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
     normalFontColor,
     inparindex,
     done,
+    pickerDeep,
   } = props;
 
   const unuseNum = (visibleNum - 1) / 2;
@@ -84,6 +87,9 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
 
   const [offsetY, setOffSetY] = useState(maxOffset);
   const [checkedIndex, setCheckedIndex] = useState(0);
+
+  const Width = (100 / pickerDeep).toFixed(1);
+  // const Width = 33.3;
 
   // 保存实例变量的 useRef 的（TS）类型是自定义interface,
   // 绑定到 DOM div 上的时候是 HTMLDivElement
@@ -168,7 +174,7 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
   /** ----------------------------------- Render ----------------------------------------- */
 
   const maskstyle = {
-    width: "33.3vw",
+    width: `${Width}vw`,
     height: unuseNum * itemHeight,
     opacity: normalBgOpacity,
     backgroundColor: normalBgColor,
@@ -179,13 +185,13 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
       onTouchMove={onMoving}
       onTouchStart={onStart}
       onTouchEnd={onMoveEnd}
-      style={{ width: "33.3vw", position: "relative", ...notouch }}
+      style={{ width: `${Width}vw`, position: "relative", ...notouch }}
     >
       <div
         style={{
           position: "absolute",
           transform: `translateY(${offsetY}px)`,
-          width: `33.3vw`,
+          width: `${Width}vw`,
           display: "inline-block",
           overflow: "hidden",
         }}
@@ -197,10 +203,10 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
               color: index === checkedIndex ? activeFontColor : normalFontColor,
               fontSize:
                 index === checkedIndex ? activeFontSize : normalFontSize,
+              lineHeight: `${itemHeight}px`,
+              height: itemHeight,
               display: "inline-block",
               textAlign: "center",
-              height: itemHeight,
-              lineHeight: `50px`,
               width: "100%",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
@@ -215,7 +221,7 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
       <div style={maskstyle} />
       <div
         style={{
-          width: "33.3vw",
+          width: `${Width}vw`,
           height: itemHeight,
           opacity: activeBgOpacity,
           backgroundColor: activeBgColor,
