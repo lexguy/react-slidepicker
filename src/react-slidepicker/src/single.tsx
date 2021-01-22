@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-01-21 16:09:02
+ * @LastEditTime: 2021-01-22 17:24:28
  * @LastEditors: xuwei
  * @Description:
  */
@@ -98,6 +98,12 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
     done(0, inparindex);
   }, []);
 
+  useEffect(() => {
+    setOffSetY(maxOffset);
+    setCheckedIndex(0);
+    comRef.wrapOffset = maxOffset;
+  }, [list]);
+
   useImperativeHandle(ref, () => ({
     resetData: () => {
       setOffSetY(maxOffset);
@@ -181,28 +187,27 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
           transform: `translateY(${offsetY}px)`,
           width: `33.3vw`,
           display: "inline-block",
+          overflow: "hidden",
         }}
       >
         {list.map((item, index) => (
           <span
             key={index}
             style={{
+              color: index === checkedIndex ? activeFontColor : normalFontColor,
+              fontSize:
+                index === checkedIndex ? activeFontSize : normalFontSize,
               display: "inline-block",
-              // margin: 0,
-              // padding: 0,
               textAlign: "center",
               height: itemHeight,
               lineHeight: `50px`,
               width: "100%",
-              color: index === checkedIndex ? activeFontColor : normalFontColor,
-              fontSize:
-                index === checkedIndex ? activeFontSize : normalFontSize,
               textOverflow: "ellipsis",
-              overflow: "hidden",
               whiteSpace: "nowrap",
+              verticalAlign: "bottom",
+              overflow: "hidden",
             }}
           >
-            {/* {index} */}
             {item.name}
           </span>
         ))}
@@ -222,13 +227,6 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
 }
 
 export const Slide = React.forwardRef(SingleSlide);
-
-const itemstyle: CSSProperties = {
-  // width: `100%`,
-  display: "inline-flex",
-  alignItems: "center",
-  // justifyContent: "center",
-};
 
 const notouch: CSSProperties = {
   userSelect: "none",

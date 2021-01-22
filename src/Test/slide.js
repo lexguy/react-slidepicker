@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 11:20:53
- * @LastEditTime: 2021-01-21 14:23:53
+ * @LastEditTime: 2021-01-22 16:58:15
  * @LastEditors: xuwei
  * @Description:
  */
@@ -19,8 +19,8 @@ export default function App() {
           // TODO  itemHeight 不设置读不到默认值
           itemHeight: 50,
           normalFontColor: "#00a",
-          normalFontSize: 15,
-          activeFontSize: 20,
+          normalFontSize: 10,
+          activeFontSize: 18,
           activeBgColor: "#fff",
           activeBgOpacity: 1,
           activeFontColor: "#F00",

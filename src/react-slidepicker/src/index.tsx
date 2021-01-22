@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:34
- * @LastEditTime: 2021-01-21 11:44:06
+ * @LastEditTime: 2021-01-22 17:46:58
  * @LastEditors: xuwei
  * @Description:
  */
@@ -68,10 +68,36 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
       lv1List[i] = lv1Item;
     }
     this.setState({ lv1List });
+    this.dismantleL2Data();
   };
 
   dismantleL2Data = () => {
     // const
+    this.result[1] = 0;
+    const lv1obj = this.props.dataSource[this.result[0] || 0];
+    if (lv1obj && lv1obj.list && lv1obj.list.length > 0) {
+      this.setState({ lv2List: lv1obj.list }, () => {
+        this.dismantleL3Data(lv1obj.list);
+      });
+    } else {
+      this.setState({ lv2List: [], lv3List: [] });
+    }
+  };
+
+  dismantleL3Data = (plv2List?: { list: [] }[]) => {
+    this.result[2] = 0;
+    const lv2List = plv2List || this.state.lv2List;
+    const lv2Index = this.result[1];
+
+    console.info("lv2List", lv2List);
+    console.info("lv2Index", lv2Index);
+
+    const lv2obj: { list: {}[] } = lv2List[lv2Index];
+    if (lv2obj && lv2obj.list && lv2obj.list.length > 0) {
+      this.setState({ lv3List: lv2obj.list });
+    } else {
+      this.setState({ lv3List: [] });
+    }
   };
 
   /** ----------------------------------- Data ----------------------------------------- */
@@ -85,14 +111,19 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
   setData = (checkedIndex: number, inparindex: number) => {
     this.result[inparindex] = checkedIndex;
     const { pickerDeep } = this.props;
-    if (inparindex < pickerDeep) {
-      for (let i = inparindex + 1; i < this.refArray.length; i++) {
-        const element = this.refArray[i];
-        this.result[i] = 0;
-        if (element && element.current) {
-          element.current.resetData();
-        }
-      }
+    // if (inparindex < pickerDeep) {
+    //   for (let i = inparindex + 1; i < this.refArray.length; i++) {
+    //     this.result[i] = 0;
+    //     const element = this.refArray[i];
+    //     if (element && element.current) {
+    //       element.current.resetData();
+    //     }
+    //   }
+    // }
+    if (inparindex === 0) {
+      this.dismantleL2Data();
+    } else if (inparindex === 1) {
+      this.dismantleL3Data();
     }
   };
 
