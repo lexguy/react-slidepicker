@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-01-22 22:42:36
+ * @LastEditTime: 2021-01-23 11:37:18
  * @LastEditors: xuwei
  * @Description:
  */
@@ -89,7 +89,7 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
 
   // max min 是  wrapOffset 取值的最大最小值
   const maxOffset = unuseNum * itemHeight; // 初始偏移,只能向上滑动   向上滑动的时候产生减小的offset
-  const minOfffset = (unuseNum + 1 - list.length) * itemHeight; // 滑到最下面的偏移量
+  const minOfffset = (unuseNum + 1 - list?.length || 0) * itemHeight; // 滑到最下面的偏移量
 
   const [checkedIndex, setCheckedIndex] = useState(0);
 
@@ -108,10 +108,10 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
   }, [inparindex, done]);
 
   useEffect(() => {
-    setAniOffset(maxOffset);
-    setCheckedIndex(0);
     comRef.wrapOffset = maxOffset;
     comRef.divElement = document.querySelector(`#AniDiv${index}`);
+    setAniOffset(maxOffset);
+    setCheckedIndex(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [list]);
 

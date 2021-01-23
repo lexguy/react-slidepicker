@@ -1,16 +1,13 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:34
- * @LastEditTime: 2021-01-22 23:12:04
+ * @LastEditTime: 2021-01-23 17:24:28
  * @LastEditors: xuwei
  * @Description:
  */
-import React, { createRef, MutableRefObject, useRef } from "react";
+import React, { CSSProperties } from "react";
 import { defaultSingleProps, ISingleProps, Slide } from "./single";
 
-interface IRef {
-  resetData: () => void;
-}
 interface IPickerProps {
   dataSource: any[];
   pickerDeep: number;
@@ -36,106 +33,63 @@ const defaultProps = {
 class CascadePicker extends React.PureComponent<IPickerProps> {
   static defaultProps = defaultProps;
   state: {
-    lv1List: [];
-    lv2List: [];
-    lv3List: [];
+    lists: any[];
   };
-  result: any[]; //保存已选择的结果,只存 Index
+  resultIndexs: any[]; //保存已选择的结果,只存 Index
+  resultArray: any[];
   constructor(props: any) {
     super(props);
     this.state = {
-      lv1List: [],
-      lv2List: [],
-      lv3List: [],
+      lists: this.initState(),
     };
-    this.result = [];
+    this.resultIndexs = [];
+    this.resultArray = [];
   }
 
-  componentDidMount() {
-    this.dismantleL1Data();
-  }
-
-  /** ----------------------------------- State ----------------------------------------- */
-  dismantleL1Data = () => {
-    const { dataSource, pickerDeep, onceChange } = this.props;
-    const lv1List = [];
-    for (let i = 0; i < dataSource.length; i++) {
-      const element = dataSource[i];
-      const { list, ...lv1Item } = element;
-      lv1List[i] = lv1Item;
-    }
-    this.setState({ lv1List });
-    if (pickerDeep === 1 && onceChange) {
-      onceChange(lv1List[0]);
-    } else {
-      this.dismantleL2Data();
-    }
-  };
-
-  dismantleL2Data = () => {
-    const { dataSource, pickerDeep, onceChange } = this.props;
-
-    this.result[1] = 0;
-    const lv1obj = dataSource[this.result[0] || 0];
-    const lv2List = lv1obj.list;
-    if (lv2List && lv2List.length > 0) {
-      this.setState({ lv2List: lv1obj.list }, () => {
-        this.dismantleL3Data(lv1obj.list);
-      });
-    } else {
-      this.setState({ lv2List: [], lv3List: [] });
-    }
-
-    if (pickerDeep === 2 && onceChange) {
-      // onceChange(lv1obj, lv2List[0]);
-    }
-  };
-
-  dismantleL3Data = (plv2List?: { list: [] }[]) => {
-    const { pickerDeep, onceChange } = this.props;
-
-    this.result[2] = 0;
-    const lv2List = plv2List || this.state.lv2List;
-    const lv2Index = this.result[1];
-    const lv2obj: { list: {}[] } = lv2List[lv2Index];
-    const lv3List = lv2obj?.list || [];
-    if (lv2obj && lv2obj.list && lv2obj.list.length > 0) {
-      this.setState({ lv3List: lv2obj.list });
-    } else {
-      this.setState({ lv3List: [] });
-    }
-    if (pickerDeep === 3 && onceChange) {
-      onceChange(lv3List[0]);
-    }
+  initState = () => {
+    const lists = new Array(this.props.pickerDeep).fill([]);
+    lists[0] = this.props.dataSource;
+    return lists;
   };
 
   /** ----------------------------------- Data ----------------------------------------- */
 
-  setData = (checkedIndex: number, inparindex: number) => {
-    this.result[inparindex] = checkedIndex;
-    const { pickerDeep } = this.props;
-    if (inparindex === 0 && pickerDeep > 1) {
-      this.dismantleL2Data();
-    } else if (inparindex === 1) {
-      this.dismantleL3Data();
+  // 当前操作的数组，当前数组第几个被选中，当前数组是第几轮
+  // 递归
+  dismantleBebindData = (array: any[], index: number, inparIndex: number) => {
+    const { pickerDeep, onceChange } = this.props;
+    const lists = this.state.lists.slice();
+    const curObj = array[index];
+    curObj && (this.resultArray[inparIndex] = curObj);
+    if (array && array.length > 0) {
+      lists[inparIndex] = array;
+      this.setState({ lists }, () => {
+        inparIndex++;
+        this.dismantleBebindData(curObj.list || [], 0, inparIndex);
+      });
+    } else {
+      for (let i = inparIndex; i < pickerDeep; i++) {
+        lists[i] = [];
+        this.resultArray[i] = {};
+      }
+      this.setState({ lists });
+      onceChange && onceChange(this.resultArray);
     }
-    // console.info("check", checkedIndex);
-    // console.info("inparindex", inparindex);
-    // console.info("[]", this.result);
-    // this.props.onceChange && this.props.onceChange();
-    // console.info("", this.bundleData());
   };
 
-  bundleData = () => {
-    const { pickerDeep } = this.props;
-    const { lv1List, lv2List, lv3List } = this.state;
-    const [r1, r2, r3] = this.result;
-    if (pickerDeep === 1) {
-      return lv1List[r1];
-    } else if (pickerDeep === 2) {
-      return [lv1List[r1], lv2List[r2]];
-    } else {
-      return [lv1List[r1], lv2List[r2], lv3List[r3]];
+  setData = (checkedIndex: number, inparindex: number) => {
+    this.setResult(checkedIndex, inparindex);
+    this.dismantleBebindData(
+      this.state.lists[inparindex],
+      checkedIndex,
+      inparindex
+    );
+  };
+
+  setResult = (checkedIndex: number, inparindex: number) => {
+    this.resultIndexs[inparindex] = checkedIndex;
+    for (let i = inparindex + 1; i < this.props.pickerDeep; i++) {
+      this.resultIndexs[i] = 0;
     }
   };
 
@@ -143,35 +97,59 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
   render() {
     const TProps = this.props;
     const SingleProps = TProps.pickerStyle;
-    const { lv1List, lv2List, lv3List } = this.state;
-    const listArray = [lv1List, lv2List, lv3List];
     return (
       <div
         style={{
-          height: SingleProps.visibleNum * SingleProps.itemHeight,
-          flexDirection: "row",
-          display: "flex",
-          overflow: "hidden",
+          backgroundColor: "#fff",
+          borderTopLeftRadius: 10,
+          borderTopRightRadius: 10,
         }}
       >
-        {new Array(TProps.pickerDeep).fill(1).map((ele, index) => {
-          return (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <span style={lbtnstyle}>取消</span>
+          <span style={rbtnstyle}>确认</span>
+        </div>
+        <div
+          style={{
+            height: SingleProps.visibleNum * SingleProps.itemHeight,
+            flexDirection: "row",
+            display: "flex",
+            overflow: "hidden",
+          }}
+        >
+          {this.state.lists.map((ele, index) => (
             <Slide
               key={index}
               {...SingleProps}
               pickerDeep={TProps.pickerDeep}
-              list={listArray[index]}
+              list={ele}
               index={index}
               inparindex={index}
               done={this.setData}
             />
-          );
-        })}
-
-        <div />
+          ))}
+          <div />
+        </div>
       </div>
     );
   }
 }
+
+const lbtnstyle: CSSProperties = {
+  display: "inline-block",
+  padding: `10px`,
+  borderTopLeftRadius: 5,
+};
+const rbtnstyle: CSSProperties = {
+  display: "inline-block",
+  padding: `10px`,
+};
 
 export default { CascadePicker };
