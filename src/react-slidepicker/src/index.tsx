@@ -1,23 +1,42 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:34
- * @LastEditTime: 2021-01-23 17:24:28
+ * @LastEditTime: 2021-01-28 23:36:41
  * @LastEditors: xuwei
  * @Description:
  */
 import React, { CSSProperties } from "react";
 import { defaultSingleProps, ISingleProps, Slide } from "./single";
 
+interface IHeadProps {
+  confirmText: string;
+  cancelText: string;
+  headHeight: number;
+  backgroundColor: string;
+  confirmStyle: object;
+  cancelStyle: object;
+  borderTopRadius: number;
+}
 interface IPickerProps {
   dataSource: any[];
   pickerDeep: number;
   confirm: ({}) => void;
   onceChange: (args: any) => void;
-  cancel: ({}) => void;
+  cancel: () => void;
   pickerStyle: ISingleProps;
-  headOptions: {};
+  headOptions: IHeadProps;
   customHead: {};
 }
+
+export const defaultHeadOptions = {
+  confirmText: "确认",
+  cancelText: "取消",
+  headHeight: 50,
+  backgroundColor: "#fff",
+  confirmStyle: {},
+  cancelStyle: {},
+  borderTopRadius: 0,
+};
 
 const defaultProps = {
   dataSource: [], //data
@@ -27,7 +46,7 @@ const defaultProps = {
   cancel: () => {},
   customHead: null,
   pickerStyle: defaultSingleProps,
-  headOptions: {},
+  headOptions: defaultHeadOptions,
 };
 
 class CascadePicker extends React.PureComponent<IPickerProps> {
@@ -93,32 +112,55 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
     }
   };
 
+  /** ----------------------------------- Callback ----------------------------------------- */
+  onCancelPress = () => {
+    if (this.props.cancel) {
+      this.props.cancel();
+    }
+  };
+
+  onConfirmPress = () => {
+    if (this.props.confirm) {
+      this.props.confirm(this.resultArray);
+    }
+  };
+
   /** ----------------------------------- Render ----------------------------------------- */
   render() {
     const TProps = this.props;
-    const SingleProps = TProps.pickerStyle;
+    const singleStyle = TProps.pickerStyle;
+    console.info("singleStyle", singleStyle);
+    const headOptions = TProps.headOptions;
+
     return (
       <div
         style={{
           backgroundColor: "#fff",
-          borderTopLeftRadius: 10,
-          borderTopRightRadius: 10,
+          borderTopLeftRadius: headOptions.borderTopRadius,
+          borderTopRightRadius: headOptions.borderTopRadius,
+          overflow: "hidden",
         }}
       >
         <div
           style={{
+            backgroundColor: headOptions.backgroundColor,
+            height: headOptions.headHeight,
             display: "flex",
             flexDirection: "row",
             justifyContent: "space-between",
             alignItems: "center",
           }}
         >
-          <span style={lbtnstyle}>取消</span>
-          <span style={rbtnstyle}>确认</span>
+          <span style={lbtnstyle} onClick={this.onCancelPress}>
+            {headOptions.cancelText}
+          </span>
+          <span style={rbtnstyle} onClick={this.onConfirmPress}>
+            {headOptions.confirmStyle}
+          </span>
         </div>
         <div
           style={{
-            height: SingleProps.visibleNum * SingleProps.itemHeight,
+            height: singleStyle.visibleNum * singleStyle.itemHeight,
             flexDirection: "row",
             display: "flex",
             overflow: "hidden",
@@ -127,7 +169,7 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
           {this.state.lists.map((ele, index) => (
             <Slide
               key={index}
-              {...SingleProps}
+              {...singleStyle}
               pickerDeep={TProps.pickerDeep}
               list={ele}
               index={index}
