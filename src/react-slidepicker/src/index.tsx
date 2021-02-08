@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:34
- * @LastEditTime: 2021-02-08 18:41:54
+ * @LastEditTime: 2021-02-08 18:42:21
  * @LastEditors: xuwei
  * @Description:
  */
@@ -151,19 +151,11 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
             alignItems: "center",
           }}
         >
-<<<<<<< HEAD
           <span style={lbtnstyle} onClick={TProps.cancel}>
             取消
           </span>
           <span style={rbtnstyle} onClick={TProps.confirm}>
             确认
-=======
-          <span style={lbtnstyle} onClick={this.onCancelPress}>
-            {headOptions.cancelText}
-          </span>
-          <span style={rbtnstyle} onClick={this.onConfirmPress}>
-            {headOptions.confirmStyle}
->>>>>>> 838fab28dea8c4f2612039d13949843706f19c26
           </span>
         </div>
         <div
