@@ -1,7 +1,11 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 11:20:53
+<<<<<<< HEAD
  * @LastEditTime: 2021-01-25 18:24:32
+=======
+ * @LastEditTime: 2021-01-28 23:13:34
+>>>>>>> 838fab28dea8c4f2612039d13949843706f19c26
  * @LastEditors: xuwei
  * @Description:
  */
@@ -24,22 +28,29 @@ export default function App() {
         show={isShow}
         dataSource={Data}
         pickerDeep={3}
-        onceChange={(arr) => console.info("arr", arr)}
+        onceChange={(arr) => console.info("oncechange", arr)}
+        confirm={(arr) => console.info("confirm", arr)}
+        cancel={() => console.info("cancel")}
         pickerStyle={{
           visibleNum: 5,
           itemHeight: 40,
           normalFontColor: "#00a",
           normalFontSize: 10,
+          normalBgColor: "#666",
+          normalBgOpacity: 0.5,
           activeFontSize: 18,
           activeBgColor: "#fff",
           activeBgOpacity: 1,
           activeFontColor: "#F00",
-          normalBgColor: "#666",
-          normalBgOpacity: 0.5,
         }}
+<<<<<<< HEAD
       >
         <span onClick={() => setIsShow(true)}>xw</span>
       </ModalCasPicker>
+=======
+        headOptions={{ borderTopRadius: 10, backgroundColor: "#fff" }}
+      />
+>>>>>>> 838fab28dea8c4f2612039d13949843706f19c26
     </div>
   );
 
