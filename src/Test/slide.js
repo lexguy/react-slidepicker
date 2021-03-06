@@ -1,11 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 11:20:53
-<<<<<<< HEAD
- * @LastEditTime: 2021-01-25 18:24:32
-=======
- * @LastEditTime: 2021-01-28 23:13:34
->>>>>>> 838fab28dea8c4f2612039d13949843706f19c26
+ * @LastEditTime: 2021-03-06 16:18:26
  * @LastEditors: xuwei
  * @Description:
  */
@@ -14,7 +10,8 @@ import { useState } from "react";
 import { CascadePicker, withModal } from "../react-slidepicker/index.ts";
 import Data from "./json/slidethree.json";
 
-const ModalCasPicker = withModal(CascadePicker);
+// const ModalCasPicker = withModal(CascadePicker);
+const ModalCasPicker = CascadePicker;
 
 export default function App() {
   const [isShow, setIsShow] = useState(false);
@@ -29,13 +26,13 @@ export default function App() {
         dataSource={Data}
         pickerDeep={3}
         onceChange={(arr) => console.info("oncechange", arr)}
-        confirm={(arr) => console.info("confirm", arr)}
-        cancel={() => console.info("cancel")}
+        // confirm={(arr) => console.info("confirm", arr)}
+        // cancel={() => console.info("cancel")}
         pickerStyle={{
-          visibleNum: 5,
+          visibleNum: 3,
           itemHeight: 40,
           normalFontColor: "#00a",
-          normalFontSize: 10,
+          normalFontSize: 12,
           normalBgColor: "#666",
           normalBgOpacity: 0.5,
           activeFontSize: 18,
@@ -43,14 +40,10 @@ export default function App() {
           activeBgOpacity: 1,
           activeFontColor: "#F00",
         }}
-<<<<<<< HEAD
+        headOptions={{ borderTopRadius: 10, backgroundColor: "#fff" }}
       >
         <span onClick={() => setIsShow(true)}>xw</span>
       </ModalCasPicker>
-=======
-        headOptions={{ borderTopRadius: 10, backgroundColor: "#fff" }}
-      />
->>>>>>> 838fab28dea8c4f2612039d13949843706f19c26
     </div>
   );
 

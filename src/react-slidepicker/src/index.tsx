@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:34
- * @LastEditTime: 2021-02-08 18:42:21
+ * @LastEditTime: 2021-03-06 15:42:22
  * @LastEditors: xuwei
  * @Description:
  */
@@ -98,11 +98,7 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
 
   setData = (checkedIndex: number, inparindex: number) => {
     this.setResult(checkedIndex, inparindex);
-    this.dismantleBebindData(
-      this.state.lists[inparindex],
-      checkedIndex,
-      inparindex
-    );
+    this.dismantleBebindData(this.state.lists[inparindex], checkedIndex, inparindex);
   };
 
   setResult = (checkedIndex: number, inparindex: number) => {

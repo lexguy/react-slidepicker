@@ -1,12 +1,12 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-25 11:40:06
- * @LastEditTime: 2021-01-25 18:20:11
+ * @LastEditTime: 2021-03-06 14:00:02
  * @LastEditors: xuwei
  * @Description:
  */
 
-import React, { Component, ReactNode } from "react";
+import React, { Component } from "react";
 import ReactDOM from "react-dom";
 
 interface ModalProps {

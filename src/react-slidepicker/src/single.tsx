@@ -1,21 +1,14 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-01-23 11:37:18
+ * @LastEditTime: 2021-03-06 16:20:54
  * @LastEditors: xuwei
  * @Description:
  */
-import React, {
-  CSSProperties,
-  useEffect,
-  useImperativeHandle,
-  useRef,
-  useState,
-} from "react";
+import React, { CSSProperties, useEffect, useImperativeHandle, useRef, useState } from "react";
 
 export interface ISingleProps {
   // list: object[];
-
   itemHeight: number; // per item height
   visibleNum: number; // visible lins
   // maskLines: 2, //
@@ -29,11 +22,10 @@ export interface ISingleProps {
   normalFontSize?: number;
   normalFontColor?: string;
 
+  // 非暴露方属性
   inparindex: number; // 第几轮
   done: (a: number, b: number) => void;
-}
 
-export interface ISingleProps {
   index: number;
   list: any[];
   pickerDeep: number;
@@ -67,8 +59,6 @@ export const defaultSingleProps = {
 
 function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
   const {
-    list,
-    index,
     itemHeight,
     visibleNum,
     activeFontSize,
@@ -79,6 +69,9 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
     normalBgOpacity,
     normalFontSize,
     normalFontColor,
+
+    list,
+    index,
     inparindex,
     done,
     pickerDeep,
@@ -165,9 +158,7 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
   const correctPosition = () => {
     const isPositive = comRef.wrapOffset > 0;
     let integer: number = Math.round(Math.abs(comRef.wrapOffset / itemHeight));
-    const postion = isPositive
-      ? integer * itemHeight
-      : -1 * integer * itemHeight;
+    const postion = isPositive ? integer * itemHeight : -1 * integer * itemHeight;
     const newIndex = Math.abs(postion / itemHeight - unuseNum);
     comRef.wrapOffset = postion;
     setOffSetAndDataBack(postion, newIndex);
@@ -213,8 +204,7 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
             key={index}
             style={{
               color: index === checkedIndex ? activeFontColor : normalFontColor,
-              fontSize:
-                index === checkedIndex ? activeFontSize : normalFontSize,
+              fontSize: index === checkedIndex ? activeFontSize : normalFontSize,
               lineHeight: `${itemHeight}px`,
               height: itemHeight,
               display: "inline-block",
