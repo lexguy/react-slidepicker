@@ -1,56 +1,16 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:34
- * @LastEditTime: 2021-03-06 15:42:22
+ * @LastEditTime: 2021-03-06 18:04:42
  * @LastEditors: xuwei
  * @Description:
  */
 import React, { CSSProperties } from "react";
-import { defaultSingleProps, ISingleProps, Slide } from "./single";
-
-interface IHeadProps {
-  confirmText: string;
-  cancelText: string;
-  headHeight: number;
-  backgroundColor: string;
-  confirmStyle: object;
-  cancelStyle: object;
-  borderTopRadius: number;
-}
-interface IPickerProps {
-  dataSource: any[];
-  pickerDeep: number;
-  confirm: ({}) => void;
-  onceChange: (args: any) => void;
-  cancel: () => void;
-  pickerStyle: ISingleProps;
-  headOptions: IHeadProps;
-  customHead: {};
-}
-
-export const defaultHeadOptions = {
-  confirmText: "确认",
-  cancelText: "取消",
-  headHeight: 50,
-  backgroundColor: "#fff",
-  confirmStyle: {},
-  cancelStyle: {},
-  borderTopRadius: 0,
-};
-
-const defaultProps = {
-  dataSource: [], //data
-  pickerDeep: 3,
-  onceChange: (arr: []) => {}, // once change callback
-  confirm: (arr: []) => {}, //confirm  send data back
-  cancel: () => {},
-  customHead: null,
-  pickerStyle: defaultSingleProps,
-  headOptions: defaultHeadOptions,
-};
+import { ISingleProps, Slide } from "./single";
+import { defaultPickerProps, IPickerProps } from "./pickerhoc";
 
 class CascadePicker extends React.PureComponent<IPickerProps> {
-  static defaultProps = defaultProps;
+  static defaultProps = defaultPickerProps;
   state: {
     lists: any[];
   };
@@ -137,7 +97,7 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
           overflow: "hidden",
         }}
       >
-        <div
+        {/* <div
           style={{
             backgroundColor: headOptions.backgroundColor,
             height: headOptions.headHeight,
@@ -153,7 +113,7 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
           <span style={rbtnstyle} onClick={TProps.confirm}>
             确认
           </span>
-        </div>
+        </div> */}
         <div
           style={{
             height: singleStyle.visibleNum * singleStyle.itemHeight,

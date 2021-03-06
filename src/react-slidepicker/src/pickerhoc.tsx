@@ -1,0 +1,194 @@
+/*
+ * @Author: xuwei
+ * @Date: 2021-03-06 16:29:06
+ * @LastEditTime: 2021-03-06 18:03:43
+ * @LastEditors: xuwei
+ * @Description:
+ */
+
+import React, { Component, CSSProperties, useRef } from "react";
+import { ISingleProps } from "./single";
+
+/** ----------------------------------- Type ----------------------------------------- */
+// Head
+export interface IHeadProps {
+  confirmText: string;
+  cancelText: string;
+  headHeight: number;
+  backgroundColor: string;
+  confirmStyle: object;
+  cancelStyle: object;
+  borderTopRadius: number;
+}
+
+// Picker
+export interface IPickerProps {
+  dataSource: any[];
+  pickerDeep: number;
+  confirm: ({}) => void;
+  onceChange: (args: any) => void;
+  cancel: () => void;
+  pickerStyle: ISingleProps;
+  headOptions: IHeadProps;
+  customHead: {};
+}
+
+/** ----------------------------------- Deafult ----------------------------------------- */
+
+export const defaultHeadOptions = {
+  confirmText: "确认",
+  cancelText: "取消",
+  headHeight: 50,
+  backgroundColor: "#fff",
+  confirmStyle: {},
+  cancelStyle: {},
+  borderTopRadius: 0,
+};
+
+export const defaultSingleProps = {
+  list: [],
+  index: 0,
+  itemHeight: 50,
+  visibleNum: 3,
+  activeBgColor: "#fff",
+  activeBgOpacity: 1,
+  activeFontSize: 18,
+  activeFontColor: "#00a",
+  normalBgColor: "#000",
+  normalBgOpacity: 0.5,
+  normalFontSize: 18,
+  normalFontColor: "#0a0",
+  inparindex: 1,
+  done: () => {},
+  pickerDeep: 3,
+};
+
+export const defaultPickerProps = {
+  dataSource: [], //data
+  pickerDeep: 3,
+  onceChange: (arr: []) => {}, // once change callback
+  confirm: (arr: []) => {}, //confirm  send data back
+  cancel: () => {},
+  customHead: null,
+  pickerStyle: defaultSingleProps,
+  headOptions: defaultHeadOptions,
+};
+
+export function WithHeadAndMethod<T extends IPickerProps>(WrapComponent: typeof Component) {
+  return (props: T) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    const local = useRef<{ resultArray: object[]; headOptions: IHeadProps }>({
+      resultArray: [],
+      headOptions: { ...defaultHeadOptions, ...props.headOptions },
+    }).current;
+
+    function _setResult(index: number, value: {}) {
+      local.resultArray[index] = value;
+    }
+
+    function getResult() {
+      return local.resultArray;
+    } // ref
+    function confirm() {
+      if (props.confirm) {
+        props.confirm(local.resultArray);
+      } else {
+        console.warn(`[slidepicker] should provide 'confirm' method`);
+      }
+    }
+    function cancel() {
+      if (props.cancel) {
+        props.cancel();
+      } else {
+        console.warn(`[slidepicker] should provide 'cancel' method`);
+      }
+    }
+
+    function onceChange() {
+      props.onceChange && props.onceChange(local.resultArray);
+    }
+
+    return (
+      <div>
+        {props.customHead ? (
+          props.customHead
+        ) : (
+          <Head headOptions={props.headOptions} cancel={cancel} confirm={confirm} />
+        )}
+        <WrapComponent
+          {...props}
+          setResult={_setResult}
+          confirm={confirm}
+          cancel={cancel}
+          onceChange={onceChange}
+        />
+      </div>
+    );
+  };
+}
+
+/***
+ * 
+    _setResult = (index: number, value: {}) => {
+      this.resultArray[index] = value;
+    };
+
+    getResult = () => this.resultArray; // ref
+    confirm = () => {
+      if (this.props.confirm) {
+        this.props.confirm(this.resultArray);
+      } else {
+        console.warn(`[slidepicker] should provide 'confirm' method`);
+      }
+    };
+    cancel = () => {
+      if (this.props.cancel) {
+        this.props.cancel();
+      } else {
+        console.warn(`[slidepicker] should provide 'cancel' method`);
+      }
+    };
+
+    onceChange = () => this.props.onceChange && this.props.onceChange(this.resultArray);
+ * 
+ */
+
+function Head({
+  headOptions,
+  cancel,
+  confirm,
+}: {
+  headOptions: IHeadProps;
+  cancel: () => void;
+  confirm: () => void;
+}) {
+  return (
+    <div
+      style={{
+        backgroundColor: headOptions.backgroundColor,
+        height: headOptions.headHeight,
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <span style={lbtnstyle} onClick={cancel}>
+        取消
+      </span>
+      <span style={rbtnstyle} onClick={confirm}>
+        确认
+      </span>
+    </div>
+  );
+}
+
+const lbtnstyle: CSSProperties = {
+  display: "inline-block",
+  padding: `10px`,
+  borderTopLeftRadius: 5,
+};
+const rbtnstyle: CSSProperties = {
+  display: "inline-block",
+  padding: `10px`,
+};

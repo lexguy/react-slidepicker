@@ -6,6 +6,7 @@
  * @Description:
  */
 import React, { CSSProperties, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { defaultSingleProps } from "./pickerhoc";
 
 export interface ISingleProps {
   // list: object[];
@@ -36,24 +37,6 @@ interface ICurrent {
   wrapOffset: number;
   divElement: HTMLDivElement | null;
 }
-
-export const defaultSingleProps = {
-  list: [],
-  index: 0,
-  itemHeight: 50,
-  visibleNum: 3,
-  activeBgColor: "#fff",
-  activeBgOpacity: 1,
-  activeFontSize: 18,
-  activeFontColor: "#00a",
-  normalBgColor: "#000",
-  normalBgOpacity: 0.5,
-  normalFontSize: 18,
-  normalFontColor: "#0a0",
-  inparindex: 1,
-  done: () => {},
-  pickerDeep: 3,
-};
 
 // SingleSlide.defaultProps = defaultSingleProps;
 
