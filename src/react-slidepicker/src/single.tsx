@@ -1,15 +1,13 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-03-08 11:52:56
+ * @LastEditTime: 2021-03-08 14:16:06
  * @LastEditors: xuwei
  * @Description:
  */
 import React, { CSSProperties, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { defaultSingleProps } from "./pickerhoc";
-
+import { defaultSingleProps, IListObj } from "./pickerhoc";
 export interface ISingleProps {
-  // list: object[];
   itemHeight: number; // per item height
   visibleNum: number; // visible lins
   // maskLines: 2, //
@@ -29,7 +27,7 @@ export interface ISingleProps {
   done: (a: number, b: number) => void;
 
   index: number;
-  list: any[];
+  list: IListObj[];
   pickerDeep: number;
 }
 
@@ -39,9 +37,11 @@ interface ICurrent {
   divElement: HTMLDivElement | null;
 }
 
-// SingleSlide.defaultProps = defaultSingleProps;
+interface singleRef {
+  resetData: () => void;
+}
 
-function SingleSlide(props: ISingleProps = defaultSingleProps, ref: any) {
+function SingleSlide(props: ISingleProps = defaultSingleProps, ref: React.Ref<singleRef>) {
   const {
     itemHeight,
     visibleNum,

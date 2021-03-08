@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:34
- * @LastEditTime: 2021-03-08 10:31:03
+ * @LastEditTime: 2021-03-08 14:11:06
  * @LastEditors: xuwei
  * @Description:
  */
@@ -9,11 +9,11 @@ import React from "react";
 import { Slide } from "./single";
 import { defaultPickerProps, IListObj, IPickerProps } from "./pickerhoc";
 
-class CascadePicker extends React.PureComponent<IPickerProps> {
+export default class CascadePicker extends React.PureComponent<IPickerProps> {
   static defaultProps = defaultPickerProps;
-  state: { lists: any[] };
-  resultArray: any[];
-  constructor(props: any) {
+  state: { lists: IListObj[][] };
+  resultArray: IListObj[];
+  constructor(props: IPickerProps | Readonly<IPickerProps>) {
     super(props);
     this.state = { lists: this.initState() };
     this.resultArray = [];
@@ -26,10 +26,9 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
   };
 
   /** ----------------------------------- Data ----------------------------------------- */
-
   // 当前操作的数组，当前数组第几个被选中，当前数组是第几轮
   // 递归
-  dismantleBebindData = (array: any[], index: number, inparIndex: number) => {
+  dismantleBebindData = (array: IListObj[], index: number, inparIndex: number) => {
     const { pickerDeep, onceChange } = this.props;
     const lists = this.state.lists.slice();
     const curObj = array[index];
@@ -82,5 +81,3 @@ class CascadePicker extends React.PureComponent<IPickerProps> {
     );
   }
 }
-
-export default CascadePicker;

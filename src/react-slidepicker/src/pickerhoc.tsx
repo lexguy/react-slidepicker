@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-03-06 16:29:06
- * @LastEditTime: 2021-03-08 11:53:37
+ * @LastEditTime: 2021-03-08 14:25:21
  * @LastEditors: xuwei
  * @Description:
  */
@@ -28,7 +28,7 @@ export interface IPickerProps {
   pickerDeep: number;
   defaultValueIndexes?: number[];
   confirm: ({}) => void;
-  onceChange: (args: any) => void;
+  onceChange: (arr: object[]) => void;
   cancel: () => void;
   pickerStyle: ISingleProps;
   headOptions: IHeadProps;
@@ -184,12 +184,11 @@ function Head({
   );
 }
 
-const lbtnstyle: CSSProperties = {
-  display: "inline-block",
-  padding: `10px`,
-  borderTopLeftRadius: 5,
-};
 const rbtnstyle: CSSProperties = {
   display: "inline-block",
   padding: `10px`,
+};
+const lbtnstyle: CSSProperties = {
+  ...rbtnstyle,
+  borderTopLeftRadius: 5,
 };

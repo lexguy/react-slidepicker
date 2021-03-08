@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:40:59
- * @LastEditTime: 2021-03-08 11:10:01
+ * @LastEditTime: 2021-03-08 12:01:26
  * @LastEditors: xuwei
  * @Description:
  */
@@ -14,5 +14,3 @@ export const withModal = modal;
 
 export const CascadePicker = WithHeadAndMethod(RelaPicker);
 export const ParallelPicker = WithHeadAndMethod(IndePicker);
-
-// export const ParallelPicker = Picker.CascadePicker;
