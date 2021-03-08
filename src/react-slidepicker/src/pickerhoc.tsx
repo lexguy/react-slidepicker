@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-03-06 16:29:06
- * @LastEditTime: 2021-03-06 18:03:43
+ * @LastEditTime: 2021-03-08 11:53:37
  * @LastEditors: xuwei
  * @Description:
  */
@@ -21,16 +21,24 @@ export interface IHeadProps {
   borderTopRadius: number;
 }
 
+export type IndeData = { name: string }[];
 // Picker
 export interface IPickerProps {
-  dataSource: any[];
+  dataSource: IListObj[] | IndeData[];
   pickerDeep: number;
+  defaultValueIndexes?: number[];
   confirm: ({}) => void;
   onceChange: (args: any) => void;
   cancel: () => void;
   pickerStyle: ISingleProps;
   headOptions: IHeadProps;
   customHead: {};
+  setResult: (index: number, item: { name?: string }) => {};
+}
+
+export interface IListObj {
+  list?: [];
+  name?: string;
 }
 
 /** ----------------------------------- Deafult ----------------------------------------- */
@@ -74,6 +82,8 @@ export const defaultPickerProps = {
   headOptions: defaultHeadOptions,
 };
 
+/** ----------------------------------- Hoc ----------------------------------------- */
+
 export function WithHeadAndMethod<T extends IPickerProps>(WrapComponent: typeof Component) {
   return (props: T) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -89,6 +99,7 @@ export function WithHeadAndMethod<T extends IPickerProps>(WrapComponent: typeof 
     function getResult() {
       return local.resultArray;
     } // ref
+
     function confirm() {
       if (props.confirm) {
         props.confirm(local.resultArray);
@@ -109,49 +120,39 @@ export function WithHeadAndMethod<T extends IPickerProps>(WrapComponent: typeof 
     }
 
     return (
-      <div>
+      <div
+        style={{
+          backgroundColor: "#fff",
+          borderTopLeftRadius: props.headOptions.borderTopRadius,
+          borderTopRightRadius: props.headOptions.borderTopRadius,
+          overflow: "hidden",
+        }}
+      >
         {props.customHead ? (
           props.customHead
         ) : (
           <Head headOptions={props.headOptions} cancel={cancel} confirm={confirm} />
         )}
-        <WrapComponent
-          {...props}
-          setResult={_setResult}
-          confirm={confirm}
-          cancel={cancel}
-          onceChange={onceChange}
-        />
+        <div
+          style={{
+            height: props.pickerStyle.visibleNum * props.pickerStyle.itemHeight,
+            flexDirection: "row",
+            display: "flex",
+            overflow: "hidden",
+          }}
+        >
+          <WrapComponent
+            {...props}
+            setResult={_setResult}
+            confirm={confirm}
+            cancel={cancel}
+            onceChange={onceChange}
+          />
+        </div>
       </div>
     );
   };
 }
-
-/***
- * 
-    _setResult = (index: number, value: {}) => {
-      this.resultArray[index] = value;
-    };
-
-    getResult = () => this.resultArray; // ref
-    confirm = () => {
-      if (this.props.confirm) {
-        this.props.confirm(this.resultArray);
-      } else {
-        console.warn(`[slidepicker] should provide 'confirm' method`);
-      }
-    };
-    cancel = () => {
-      if (this.props.cancel) {
-        this.props.cancel();
-      } else {
-        console.warn(`[slidepicker] should provide 'cancel' method`);
-      }
-    };
-
-    onceChange = () => this.props.onceChange && this.props.onceChange(this.resultArray);
- * 
- */
 
 function Head({
   headOptions,

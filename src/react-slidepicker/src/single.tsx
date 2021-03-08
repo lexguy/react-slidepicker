@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-03-06 16:20:54
+ * @LastEditTime: 2021-03-08 11:52:56
  * @LastEditors: xuwei
  * @Description:
  */
@@ -23,6 +23,7 @@ export interface ISingleProps {
   normalFontSize?: number;
   normalFontColor?: string;
 
+  defaultIndex?: number;
   // 非暴露方属性
   inparindex: number; // 第几轮
   done: (a: number, b: number) => void;

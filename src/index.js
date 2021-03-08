@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:20:08
- * @LastEditTime: 2021-01-08 11:23:41
+ * @LastEditTime: 2021-03-08 11:08:00
  * @LastEditors: xuwei
  * @Description:
  */
@@ -9,7 +9,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 // import App from "./App";
-import App from "./Test/slide";
+import App from "./Test/testslide";
 import reportWebVitals from "./reportWebVitals";
 
 ReactDOM.render(

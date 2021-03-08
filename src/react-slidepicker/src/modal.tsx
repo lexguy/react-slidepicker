@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-25 11:40:06
- * @LastEditTime: 2021-03-06 14:00:02
+ * @LastEditTime: 2021-03-08 11:53:13
  * @LastEditors: xuwei
  * @Description:
  */
@@ -25,7 +25,7 @@ export default function withModal(Picker: typeof Component) {
     }
 
     componentDidUpdate() {
-      console.info("update", this.props);
+      // console.info("update", this.props);
       this.freshModal();
     }
 
