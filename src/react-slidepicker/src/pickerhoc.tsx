@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-03-06 16:29:06
- * @LastEditTime: 2021-03-08 14:25:21
+ * @LastEditTime: 2021-03-09 00:04:23
  * @LastEditors: xuwei
  * @Description:
  */
@@ -84,7 +84,9 @@ export const defaultPickerProps = {
 
 /** ----------------------------------- Hoc ----------------------------------------- */
 
-export function WithHeadAndMethod<T extends IPickerProps>(WrapComponent: typeof Component) {
+export function WithHeadAndMethod<T extends IPickerProps>(
+  WrapComponent: typeof Component
+) {
   return (props: T) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const local = useRef<{ resultArray: object[]; headOptions: IHeadProps }>({
@@ -123,15 +125,19 @@ export function WithHeadAndMethod<T extends IPickerProps>(WrapComponent: typeof 
       <div
         style={{
           backgroundColor: "#fff",
-          borderTopLeftRadius: props.headOptions.borderTopRadius,
-          borderTopRightRadius: props.headOptions.borderTopRadius,
+          borderTopLeftRadius: local.headOptions.borderTopRadius,
+          borderTopRightRadius: local.headOptions.borderTopRadius,
           overflow: "hidden",
         }}
       >
         {props.customHead ? (
           props.customHead
         ) : (
-          <Head headOptions={props.headOptions} cancel={cancel} confirm={confirm} />
+          <Head
+            headOptions={local.headOptions}
+            cancel={cancel}
+            confirm={confirm}
+          />
         )}
         <div
           style={{

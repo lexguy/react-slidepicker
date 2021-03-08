@@ -1,20 +1,25 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 11:20:53
- * @LastEditTime: 2021-03-08 11:48:34
+ * @LastEditTime: 2021-03-09 00:12:31
  * @LastEditors: xuwei
  * @Description:
  */
 
 import { useState } from "react";
-import { CascadePicker, withModal, ParallelPicker } from "../react-slidepicker/index.ts";
+import {
+  CascadePicker,
+  withModal,
+  ParallelPicker,
+} from "../react-slidepicker/index.ts";
 import Data from "./json/slidethree.json";
 import Spec from "./json/spec.json";
 
 // const ModalCasPicker = withModal(CascadePicker);
 const ModalCasPicker = CascadePicker;
 // const
-const ModalParPicker = withModal(ParallelPicker);
+const ModalParPicker = ParallelPicker;
+// const ModalParPicker = withModal(ParallelPicker);
 
 export default function App() {
   const [isShow, setIsShow] = useState(false);
@@ -57,9 +62,6 @@ export default function App() {
         show={isShow}
         dataSource={Spec}
         pickerDeep={2}
-        // onceChange={(arr) => console.info("oncechange", arr)}
-        // confirm={(arr) => console.info("confirm", arr)}
-        // cancel={() => console.info("cancel")}
         pickerStyle={{
           visibleNum: 3,
           itemHeight: 40,
@@ -72,7 +74,19 @@ export default function App() {
           activeBgOpacity: 1,
           activeFontColor: "#F00",
         }}
-        headOptions={{ borderTopRadius: 10, backgroundColor: "#fff" }}
+        // headOptions={{ borderTopRadius: 10, backgroundColor: "#fff" }}
+        customHead={
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <span onClick={() => setIsShow(false)}>Cancel</span>
+            <span
+              onClick={() => {
+                setIsShow(false);
+              }}
+            >
+              确认
+            </span>
+          </div>
+        }
       >
         <span onClick={() => setIsShow(true)}>xw</span>
       </ModalParPicker>
