@@ -1,13 +1,14 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 11:20:53
- * @LastEditTime: 2021-03-09 21:18:32
+ * @LastEditTime: 2021-03-09 23:00:18
  * @LastEditors: xuwei
  * @Description:
  */
 
 import { useRef, useState } from "react";
-import { CascadePicker, ParallelPicker, withModal } from "../react-slidepicker/index.ts";
+// import { CascadePicker, ParallelPicker, withModal } from "../react-slidepicker/index.ts";
+import { CascadePicker, ParallelPicker, withModal } from "react-slidepicker";
 import Data from "./json/slidethree.json";
 import Spec from "./json/spec.json";
 import ICON_DOG from "./imgs/dog.png";
