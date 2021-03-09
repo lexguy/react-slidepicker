@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-03-01 16:29:06
- * @LastEditTime: 2021-03-09 14:18:51
+ * @LastEditTime: 2021-03-09 14:46:23
  * @LastEditors: xuwei
  * @Description:
  */
@@ -26,6 +26,7 @@ export interface IPickerProps {
   dataSource: IListObj[] | IndeData[];
   pickerDeep: number;
   defaultValueIndexes?: number[];
+  value?: string[];
   confirm: (arr: object[]) => void;
   onceChange: (arr: object[]) => void;
   cancel: () => void;

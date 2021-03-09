@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 11:20:53
- * @LastEditTime: 2021-03-09 13:57:20
+ * @LastEditTime: 2021-03-09 14:41:09
  * @LastEditors: xuwei
  * @Description:
  */
@@ -30,6 +30,7 @@ export default function App() {
         show={showName === 1}
         dataSource={Data}
         pickerDeep={3}
+        value={["North America", "Canada", "Edmonton"]}
         pickerStyle={{
           visibleNum: 3,
           itemHeight: 40,

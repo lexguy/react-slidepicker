@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:34
- * @LastEditTime: 2021-03-09 14:32:05
+ * @LastEditTime: 2021-03-09 16:28:31
  * @LastEditors: xuwei
  * @Description:
  */
@@ -72,9 +72,9 @@ export default class CascadePicker extends React.PureComponent<IPickerProps> {
             {...singleStyle}
             pickerDeep={TProps.pickerDeep}
             list={ele}
-            index={index}
             inparindex={index}
             done={this.setData}
+            value={TProps.value?.[index] || ""}
           />
         ))}
       </React.Fragment>

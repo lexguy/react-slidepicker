@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-03-09 14:30:39
+ * @LastEditTime: 2021-03-09 16:28:39
  * @LastEditors: xuwei
  * @Description:
  */
@@ -29,11 +29,11 @@ export interface ISingleProps {
   normalFontColor?: string;
 
   defaultIndex?: number;
+  value?: string;
   // 非暴露属性
   inparindex: number; // 第几轮
   done: (a: number, b: number) => void;
 
-  index: number;
   list: IListObj[];
   pickerDeep: number;
 }
@@ -61,8 +61,8 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: React.Ref<si
     normalFontSize,
     normalFontColor,
 
+    value,
     list,
-    index,
     inparindex,
     done,
     pickerDeep,
@@ -97,7 +97,7 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: React.Ref<si
 
   useEffect(() => {
     comRef.wrapOffset = maxOffset;
-    comRef.divElement = document.querySelector(`#AniDiv${index}`);
+    comRef.divElement = document.querySelector(`#AniDiv${inparindex}`);
     setAniOffset(maxOffset);
     setCheckedIndex(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -110,6 +110,20 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: React.Ref<si
       comRef.wrapOffset = maxOffset;
     },
   }));
+
+  /** ----------------------------------- DefaultValue ----------------------------------------- */
+  // if (value) {
+  //   valueIndex = list.findIndex((item, index) => item.name === value);
+  //   comRef.wrapOffset = (unuseNum - valueIndex) * itemHeight;
+
+  //   setAniOffset((unuseNum - valueIndex) * itemHeight);
+  //   if (inparindex === 0) {
+  //     console.info("value", value);
+  //     console.info("list", list);
+  //     console.info("valueIndex", unuseNum - valueIndex);
+  //   }
+  //   setCheckedIndex(valueIndex);
+  // }
 
   /** ----------------------------------- DOM ----------------------------------------- */
   const setAniOffset = useCallback(
@@ -195,7 +209,7 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: React.Ref<si
       style={{ width: `${Width}vw`, position: "relative", ...notouch }}
     >
       <div
-        id={`AniDiv${index}`}
+        id={`AniDiv${inparindex}`}
         style={{
           position: "absolute",
           width: `${Width}vw`,
@@ -238,7 +252,15 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: React.Ref<si
   );
 }
 
-export const Slide = React.forwardRef(SingleSlide);
+export const Slide = React.memo(React.forwardRef(SingleSlide), equal);
+
+function equal(prevProps: ISingleProps, nextProps: ISingleProps) {
+  if (JSON.stringify(prevProps.list) === JSON.stringify(nextProps.list)) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 const notouch: CSSProperties = {
   userSelect: "none",

@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-03-01 10:34:36
- * @LastEditTime: 2021-03-09 11:27:39
+ * @LastEditTime: 2021-03-09 16:28:12
  * @LastEditors: xuwei
  * @Description:
  */
@@ -39,7 +39,6 @@ export default class IndePicker extends Component<IPickerProps> {
             {...pickerStyle}
             list={list}
             pickerDeep={pickerDeep}
-            index={index}
             inparindex={index}
             done={this._done}
             defaultIndex={defaultValueIndexes ? defaultValueIndexes[index] : 0}
