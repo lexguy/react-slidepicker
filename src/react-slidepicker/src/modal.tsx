@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-25 11:40:06
- * @LastEditTime: 2021-03-09 00:12:05
+ * @LastEditTime: 2021-03-09 11:19:03
  * @LastEditors: xuwei
  * @Description:
  */
@@ -11,10 +11,11 @@ import ReactDOM from "react-dom";
 
 interface ModalProps {
   show: boolean;
+  forwardedRef: React.ForwardedRef<any>;
 }
 
 export default function withModal(Picker: typeof Component) {
-  return class extends React.Component<ModalProps> {
+  class Real extends React.Component<ModalProps> {
     _divEle: HTMLDivElement | null;
     private _body: HTMLElement;
     constructor(props: ModalProps | Readonly<ModalProps>) {
@@ -32,14 +33,14 @@ export default function withModal(Picker: typeof Component) {
       if (this.props.show) {
         this._divEle = document.createElement("div");
         this._divEle.id = "tempmodal";
-        this._body.appendChild(this._divEle);
+        this._body?.appendChild(this._divEle);
         ReactDOM.render(
-          <Modal Picker={Picker} {...this.props} />,
+          <Modal Picker={Picker} pickerRef={this.props.forwardedRef} {...this.props} />,
           document.querySelector("#tempmodal")
         );
       } else {
-        if (this._divEle) {
-          this._body.removeChild(this._divEle);
+        if (this._divEle && this._body.contains(this._divEle)) {
+          this._body?.removeChild(this._divEle);
         }
       }
     };
@@ -47,11 +48,13 @@ export default function withModal(Picker: typeof Component) {
     render() {
       return this.props.children;
     }
-  };
+  }
+  return React.forwardRef((props: ModalProps, ref) => <Real {...props} forwardedRef={ref} />);
 }
 
 interface MProps {
   Picker: typeof React.Component;
+  pickerRef: React.ForwardedRef<any>;
 }
 
 function Modal(props: MProps) {
@@ -69,7 +72,7 @@ function Modal(props: MProps) {
         backgroundColor: "#000000aa",
       }}
     >
-      <Picker {...otherProps} />
+      <Picker {...otherProps} ref={props.pickerRef} />
     </div>
   );
 }

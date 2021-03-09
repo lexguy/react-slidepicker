@@ -1,39 +1,33 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 11:20:53
- * @LastEditTime: 2021-03-09 00:12:31
+ * @LastEditTime: 2021-03-09 11:33:10
  * @LastEditors: xuwei
  * @Description:
  */
 
-import { useState } from "react";
-import {
-  CascadePicker,
-  withModal,
-  ParallelPicker,
-} from "../react-slidepicker/index.ts";
+import { useRef, useState } from "react";
+import { CascadePicker, ParallelPicker, withModal } from "../react-slidepicker/index.ts";
 import Data from "./json/slidethree.json";
 import Spec from "./json/spec.json";
+import ICON_DOG from "./imgs/dog.png";
 
-// const ModalCasPicker = withModal(CascadePicker);
-const ModalCasPicker = CascadePicker;
-// const
-const ModalParPicker = ParallelPicker;
-// const ModalParPicker = withModal(ParallelPicker);
+const ModalCasPicker = withModal(CascadePicker);
+const ModalParPicker = withModal(ParallelPicker);
 
 export default function App() {
-  const [isShow, setIsShow] = useState(false);
+  const [showName, setShowName] = useState(0);
+  const pickerRef = useRef();
 
   return (
     <div>
-      {/* <div style={{ height: 100, backgroundColor: "#a00" }}></div> */}
-      {/* <ModalCasPicker
+      <ModalCasPicker
         confirm={(arr) => {
           console.info("arr", arr);
-          setIsShow(false);
+          setShowName("");
         }}
-        cancel={() => setIsShow(false)}
-        show={isShow}
+        cancel={() => setShowName(0)}
+        show={showName === 1}
         dataSource={Data}
         pickerDeep={3}
         pickerStyle={{
@@ -50,16 +44,18 @@ export default function App() {
         }}
         headOptions={{ borderTopRadius: 10, backgroundColor: "#fff" }}
       >
-        <span onClick={() => setIsShow(true)}>xw</span>
-      </ModalCasPicker> */}
+        <span onClick={() => setShowName(1)}>xw</span>
+      </ModalCasPicker>
 
       <ModalParPicker
-        confirm={(arr) => {
-          console.info("arr", arr);
-          setIsShow(false);
-        }}
-        cancel={() => setIsShow(false)}
-        show={isShow}
+        ref={pickerRef}
+        // 提供 customHead 的时候 confirm和cancel失效，应该在customHead中手动实现
+        // confirm={(arr) => {
+        //   console.info("data", arr);
+        //   setShowName(0);
+        // }}
+        // cancel={() => setShowName(0)}
+        show={showName === 2}
         dataSource={Spec}
         pickerDeep={2}
         pickerStyle={{
@@ -74,51 +70,29 @@ export default function App() {
           activeBgOpacity: 1,
           activeFontColor: "#F00",
         }}
-        // headOptions={{ borderTopRadius: 10, backgroundColor: "#fff" }}
         customHead={
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <span onClick={() => setIsShow(false)}>Cancel</span>
-            <span
-              onClick={() => {
-                setIsShow(false);
-              }}
-            >
-              确认
-            </span>
-          </div>
+          <MyHead
+            confirm={() => {
+              const data = pickerRef.current.getResult();
+              console.info("data", data);
+              setShowName(0);
+            }}
+          />
         }
       >
-        <span onClick={() => setIsShow(true)}>xw</span>
+        <div onClick={() => setShowName(2)}>选择规格</div>
       </ModalParPicker>
     </div>
   );
+}
 
-  // <div
-  //   style={{
-  //     backgroundColor: "#333333dd",
-  //     height: `100vh`,
-  //     display: "flex",
-  //     flexDirection: "column",
-  //     flex: 1,
-  //     justifyContent: "flex-end",
-  //   }}
-  // >
-  //   <CascadePicker
-  //     dataSource={Data}
-  //     pickerDeep={3}
-  //     onceChange={(arr) => console.info("arr", arr)}
-  //     pickerStyle={{
-  //       visibleNum: 5,
-  //       itemHeight: 40,
-  //       normalFontColor: "#00a",
-  //       normalFontSize: 10,
-  //       activeFontSize: 18,
-  //       activeBgColor: "#fff",
-  //       activeBgOpacity: 1,
-  //       activeFontColor: "#F00",
-  //       normalBgColor: "#666",
-  //       normalBgOpacity: 0.5,
-  //     }}
-  //   />
-  // </div>
+function MyHead({ confirm }) {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", backgroundColor: "#333" }}>
+      <img src={ICON_DOG} alt="dog" style={{ width: 30, height: 30, margin: `8px 0 0 10px` }}></img>
+      <span style={{ fontSize: 18, color: "#fff", padding: 10 }} onClick={confirm}>
+        确认
+      </span>
+    </div>
+  );
 }

@@ -1,12 +1,12 @@
 /*
  * @Author: xuwei
  * @Date: 2021-03-06 16:29:06
- * @LastEditTime: 2021-03-09 00:04:23
+ * @LastEditTime: 2021-03-09 11:26:47
  * @LastEditors: xuwei
  * @Description:
  */
 
-import React, { Component, CSSProperties, useRef } from "react";
+import React, { Component, CSSProperties, useImperativeHandle, useRef } from "react";
 import { ISingleProps } from "./single";
 
 /** ----------------------------------- Type ----------------------------------------- */
@@ -27,7 +27,7 @@ export interface IPickerProps {
   dataSource: IListObj[] | IndeData[];
   pickerDeep: number;
   defaultValueIndexes?: number[];
-  confirm: ({}) => void;
+  confirm: (arr: object[]) => void;
   onceChange: (arr: object[]) => void;
   cancel: () => void;
   pickerStyle: ISingleProps;
@@ -46,7 +46,7 @@ export interface IListObj {
 export const defaultHeadOptions = {
   confirmText: "确认",
   cancelText: "取消",
-  headHeight: 50,
+  headHeight: 46,
   backgroundColor: "#fff",
   confirmStyle: {},
   cancelStyle: {},
@@ -84,10 +84,8 @@ export const defaultPickerProps = {
 
 /** ----------------------------------- Hoc ----------------------------------------- */
 
-export function WithHeadAndMethod<T extends IPickerProps>(
-  WrapComponent: typeof Component
-) {
-  return (props: T) => {
+export function WithHeadAndMethod<T extends IPickerProps>(WrapComponent: typeof Component) {
+  return React.forwardRef((props: T, ref) => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     const local = useRef<{ resultArray: object[]; headOptions: IHeadProps }>({
       resultArray: [],
@@ -98,9 +96,9 @@ export function WithHeadAndMethod<T extends IPickerProps>(
       local.resultArray[index] = value;
     }
 
-    function getResult() {
-      return local.resultArray;
-    } // ref
+    useImperativeHandle(ref, () => ({
+      getResult: () => local.resultArray, // ref
+    }));
 
     function confirm() {
       if (props.confirm) {
@@ -133,11 +131,7 @@ export function WithHeadAndMethod<T extends IPickerProps>(
         {props.customHead ? (
           props.customHead
         ) : (
-          <Head
-            headOptions={local.headOptions}
-            cancel={cancel}
-            confirm={confirm}
-          />
+          <Head headOptions={local.headOptions} cancel={cancel} confirm={confirm} />
         )}
         <div
           style={{
@@ -157,7 +151,7 @@ export function WithHeadAndMethod<T extends IPickerProps>(
         </div>
       </div>
     );
-  };
+  });
 }
 
 function Head({

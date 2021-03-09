@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-03-08 10:34:36
- * @LastEditTime: 2021-03-08 11:48:06
+ * @LastEditTime: 2021-03-09 11:27:39
  * @LastEditors: xuwei
  * @Description:
  */
@@ -22,7 +22,7 @@ export default class IndePicker extends Component<IPickerProps> {
   };
 
   _done = (dataindex: number, parindex: number) => {
-    const { dataSource, onceChange } = this.props;
+    const { dataSource } = this.props; //onceChange
     const list = dataSource[parindex] as IndeData;
     this.props.setResult(parindex, list[dataindex]);
     // onceChange && onceChange();
