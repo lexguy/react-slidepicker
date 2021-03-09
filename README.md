@@ -79,7 +79,7 @@ export default function App() {
 - [`cancel`](#cancel)
 - [`pickerStyle`](#pickerStyle)
 - [`headOptions`](#options)
-- [`customHead`](#head)
+- [`customHead`](#customHead)
 
 <hr id='show'/ >
 
