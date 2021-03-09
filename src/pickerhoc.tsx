@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-03-01 16:29:06
- * @LastEditTime: 2021-03-09 14:46:23
+ * @LastEditTime: 2021-03-09 21:17:11
  * @LastEditors: xuwei
  * @Description:
  */
@@ -178,21 +178,17 @@ function Head({
         alignItems: "center",
       }}
     >
-      <span style={lbtnstyle} onClick={cancel}>
-        取消
+      <span style={{ ...btnstyle, ...headOptions.cancelStyle }} onClick={cancel}>
+        {headOptions.cancelText || "取消"}
       </span>
-      <span style={rbtnstyle} onClick={confirm}>
-        确认
+      <span style={{ ...btnstyle, ...headOptions.confirmStyle }} onClick={confirm}>
+        {headOptions.confirmText || "确认"}
       </span>
     </div>
   );
 }
 
-const rbtnstyle: CSSProperties = {
+const btnstyle: CSSProperties = {
   display: "inline-block",
   padding: `10px`,
-};
-const lbtnstyle: CSSProperties = {
-  ...rbtnstyle,
-  borderTopLeftRadius: 5,
 };

@@ -1,6 +1,6 @@
 {
   "name": "react-slidepicker",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a react picker component for mobile",
   "main": "index.js",
   "scripts": {
@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/lexguy/react-slidepicker#readme",
   "files": [
-    "index.js",
+    "index.ts",
     "src/",
     "src",
     "README.md"

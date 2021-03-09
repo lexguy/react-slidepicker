@@ -80,13 +80,13 @@ export default function App() {
 - [`headOptions`](#options)
 - [`customHead`](#head)
 
-<hr id='show'/ >
+<hr id='show' />
 
 ### `show : boolean`
 
 if you use `withModal`hoc，this prop is **required**.
 
----
+<hr id='dataSource' />
 
 ### `dataSource : array`
 
@@ -94,27 +94,27 @@ if you use `withModal`hoc，this prop is **required**.
 
 `name` and `list` are keywords , `name` will be shown in the picker, `list` should be a array.
 
-[Data format to follow](https://github.com/lexguy/react-native-slidepicker#dataformat)
+[Data format to follow](#dataformat)
 
----
+<hr id='pickerDeep' />
 
 ### `pickerDeep : number`
 
 only used in CascadePicker, the num of sub pickers, **required**.
 
----
+<hr id='confirm' />
 
 ### `confirm : (dataArray) => { }`
 
 if you won't use the customeHead, this function is required. called by confirm button, send the picker data back.
 
----
+<hr id='cancel' />
 
 ### `cancel : () => { }`
 
 if you won't use the customeHead, this function is required. called by cancel button, you should close the picker in this function.
 
----
+<hr id='pickerStyle' />
 
 ### `pickerStyle : object`
 
@@ -133,7 +133,7 @@ a custom style for the picker content , receives these props:
 | normalFontSize  | number          | 16            | Unselected item font color             |
 | normalFontColor | string：(color) | "#333"        | Unselected item font color             |
 
----
+<hr id='headOptions' />
 
 ### `headOptions : object`
 
@@ -149,7 +149,7 @@ a custom style for the picker header , receives these props:
 | confirmStyle    | object (style) | {padding: '10px'} | confirm text style          |
 | cancelStyle     | object (style) | {padding: '10px'} | cancel text style           |
 
----
+<hr id='customHead' />
 
 ### `customHead : view`
 
@@ -161,7 +161,7 @@ you should provide the ref , and call `getResult` method to get the result of th
 
 if you custom the head, then you have to call `getResult` method by ref to get result.
 
----
+<hr id='getResult' />
 
 ### `getResult()`
 
@@ -199,6 +199,7 @@ once change the picker, it will be called and send current result back.
 
 only available in ParallelPicker for now...
 
+<hr id="dataformat" />
 ## Others
 
 format of dataSource prop:

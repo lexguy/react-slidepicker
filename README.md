@@ -87,7 +87,7 @@ export default function App() {
 
 表示是否显示`Modal`，如果使用了`widthModal`，就需要指定这个属性。
 
----
+<hr id="dataSource"/>
 
 ### `dataSource : array`
 
@@ -95,27 +95,27 @@ export default function App() {
 
 `name` 和`list` 是数据源的关键字 , `name` 会显示在组件中, `list` 是子列表数据。
 
-[数据源的格式](https://github.com/lexguy/react-native-slidepicker#dataformat)
+[数据源的格式](#dataformat)
 
----
+<hr id="pickerDeep"/>
 
 ### `pickerDeep : number`
 
 用于嵌套级联的选择器中，表示选择器的层级，**在级联选择器中必须**。
 
----
+<hr id="confirm"/>
 
 ### `confirm : (dataArray) => { }`
 
 如果没有使用`customHead`，那么就应该指定这个函数用作 `确认` 按钮的点击事件，用于接收确认选择的结果，返回一个结果数组。
 
----
+<hr id="cancel"/>
 
 ### `cancel : () => { }`
 
 如果没有使用`customHead`，那么就应该指定这个函数，用于 `取消` 按钮的点击事件。
 
----
+<hr id="pickerStyle"/>
 
 ### `pickerStyle : object`
 
@@ -134,7 +134,7 @@ export default function App() {
 | normalFontSize  | number          | 16            | 未选中项的字体大小   |
 | normalFontColor | string：(color) | "#333"        | 未选中项的字体颜色   |
 
----
+<hr id="headOptions"/>
 
 ### `headOptions : object`
 
@@ -150,7 +150,7 @@ export default function App() {
 | confirmStyle    | object (style) | {padding: '10px'} | 确认按钮文本样式 |
 | cancelStyle     | object (style) | {padding: '10px'} | 取消按钮文本样式 |
 
-------
+<hr id="customHead"/>
 
 ### `customHead : view`
 
@@ -201,6 +201,8 @@ export default function App() {
 ### `defaultValueIndexes`
 
 默认选中值，待完善
+
+<hr id="dataformat"/>
 
 ## 其他
 
