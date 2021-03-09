@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 11:20:53
- * @LastEditTime: 2021-03-09 14:41:09
+ * @LastEditTime: 2021-03-09 21:18:32
  * @LastEditors: xuwei
  * @Description:
  */
@@ -43,7 +43,11 @@ export default function App() {
           activeBgOpacity: 1,
           activeFontColor: "#F00",
         }}
-        headOptions={{ borderTopRadius: 10, backgroundColor: "#fff" }}
+        headOptions={{
+          borderTopRadius: 10,
+          backgroundColor: "#fff",
+          confirmStyle: { fontSize: 20, color: "#a00" },
+        }}
       >
         <span onClick={() => setShowName(1)}>选择地区</span>
       </ModalCasPicker>
@@ -58,7 +62,7 @@ export default function App() {
         // cancel={() => setShowName(0)}
         show={showName === 2}
         dataSource={Spec}
-        pickerDeep={2}
+        // pickerDeep={2}
         pickerStyle={{
           visibleNum: 3,
           itemHeight: 40,

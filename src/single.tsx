@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-03-09 16:28:39
+ * @LastEditTime: 2021-03-09 20:58:00
  * @LastEditors: xuwei
  * @Description:
  */
@@ -61,7 +61,7 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: React.Ref<si
     normalFontSize,
     normalFontColor,
 
-    value,
+    // value,
     list,
     inparindex,
     done,
