@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 11:20:53
- * @LastEditTime: 2021-03-09 11:33:10
+ * @LastEditTime: 2021-03-09 13:57:20
  * @LastEditors: xuwei
  * @Description:
  */
@@ -23,7 +23,7 @@ export default function App() {
     <div>
       <ModalCasPicker
         confirm={(arr) => {
-          console.info("arr", arr);
+          console.info("data1", arr);
           setShowName("");
         }}
         cancel={() => setShowName(0)}
@@ -44,7 +44,7 @@ export default function App() {
         }}
         headOptions={{ borderTopRadius: 10, backgroundColor: "#fff" }}
       >
-        <span onClick={() => setShowName(1)}>xw</span>
+        <span onClick={() => setShowName(1)}>选择地区</span>
       </ModalCasPicker>
 
       <ModalParPicker
@@ -74,7 +74,7 @@ export default function App() {
           <MyHead
             confirm={() => {
               const data = pickerRef.current.getResult();
-              console.info("data", data);
+              console.info("data2", data);
               setShowName(0);
             }}
           />

@@ -1,7 +1,7 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-25 11:40:06
- * @LastEditTime: 2021-03-09 11:19:03
+ * @LastEditTime: 2021-03-09 14:20:34
  * @LastEditors: xuwei
  * @Description:
  */
@@ -33,14 +33,14 @@ export default function withModal(Picker: typeof Component) {
       if (this.props.show) {
         this._divEle = document.createElement("div");
         this._divEle.id = "tempmodal";
-        this._body?.appendChild(this._divEle);
+        this._body.appendChild(this._divEle);
         ReactDOM.render(
           <Modal Picker={Picker} pickerRef={this.props.forwardedRef} {...this.props} />,
           document.querySelector("#tempmodal")
         );
       } else {
         if (this._divEle && this._body.contains(this._divEle)) {
-          this._body?.removeChild(this._divEle);
+          this._body.removeChild(this._divEle);
         }
       }
     };

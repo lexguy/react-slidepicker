@@ -1,16 +1,15 @@
 /*
  * @Author: xuwei
- * @Date: 2021-03-06 16:29:06
- * @LastEditTime: 2021-03-09 11:26:47
+ * @Date: 2021-03-01 16:29:06
+ * @LastEditTime: 2021-03-09 14:18:51
  * @LastEditors: xuwei
  * @Description:
  */
 
-import React, { Component, CSSProperties, useImperativeHandle, useRef } from "react";
+import React, { Component, CSSProperties, useCallback, useImperativeHandle, useRef } from "react";
 import { ISingleProps } from "./single";
 
 /** ----------------------------------- Type ----------------------------------------- */
-// Head
 export interface IHeadProps {
   confirmText: string;
   cancelText: string;
@@ -86,38 +85,42 @@ export const defaultPickerProps = {
 
 export function WithHeadAndMethod<T extends IPickerProps>(WrapComponent: typeof Component) {
   return React.forwardRef((props: T, ref) => {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
     const local = useRef<{ resultArray: object[]; headOptions: IHeadProps }>({
       resultArray: [],
       headOptions: { ...defaultHeadOptions, ...props.headOptions },
     }).current;
 
-    function _setResult(index: number, value: {}) {
-      local.resultArray[index] = value;
-    }
-
     useImperativeHandle(ref, () => ({
       getResult: () => local.resultArray, // ref
     }));
 
-    function confirm() {
+    const _setResult = useCallback(
+      (index: number, value: {}) => {
+        local.resultArray[index] = value;
+      },
+      [local.resultArray]
+    );
+
+    const confirm = useCallback(() => {
+      console.info("confirm");
       if (props.confirm) {
         props.confirm(local.resultArray);
       } else {
         console.warn(`[slidepicker] should provide 'confirm' method`);
       }
-    }
-    function cancel() {
+    }, [local.resultArray, props]);
+
+    const cancel = useCallback(() => {
       if (props.cancel) {
         props.cancel();
       } else {
         console.warn(`[slidepicker] should provide 'cancel' method`);
       }
-    }
+    }, [props]);
 
-    function onceChange() {
+    const onceChange = useCallback(() => {
       props.onceChange && props.onceChange(local.resultArray);
-    }
+    }, [local.resultArray, props]);
 
     return (
       <div

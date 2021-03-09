@@ -1,16 +1,23 @@
 /*
  * @Author: xuwei
  * @Date: 2021-01-08 10:41:24
- * @LastEditTime: 2021-03-08 14:16:06
+ * @LastEditTime: 2021-03-09 14:30:39
  * @LastEditors: xuwei
  * @Description:
  */
-import React, { CSSProperties, useEffect, useImperativeHandle, useRef, useState } from "react";
+import React, {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { defaultSingleProps, IListObj } from "./pickerhoc";
 export interface ISingleProps {
   itemHeight: number; // per item height
   visibleNum: number; // visible lins
-  // maskLines: 2, //
   activeBgColor?: string;
   activeBgOpacity?: number;
   activeFontSize?: number;
@@ -22,7 +29,7 @@ export interface ISingleProps {
   normalFontColor?: string;
 
   defaultIndex?: number;
-  // 非暴露方属性
+  // 非暴露属性
   inparindex: number; // 第几轮
   done: (a: number, b: number) => void;
 
@@ -61,12 +68,16 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: React.Ref<si
     pickerDeep,
   } = props;
 
-  const unuseNum = (visibleNum - 1) / 2;
-  const Width = (100 / pickerDeep).toFixed(1);
+  const unuseNum = useMemo(() => (visibleNum - 1) / 2, [visibleNum]);
+  const Width = useMemo(() => (100 / pickerDeep).toFixed(1), [pickerDeep]);
 
   // max min 是  wrapOffset 取值的最大最小值
-  const maxOffset = unuseNum * itemHeight; // 初始偏移,只能向上滑动   向上滑动的时候产生减小的offset
-  const minOfffset = (unuseNum + 1 - list?.length || 0) * itemHeight; // 滑到最下面的偏移量
+  const maxOffset = useMemo(() => unuseNum * itemHeight, [unuseNum, itemHeight]); // 初始偏移,只能向上滑动   向上滑动的时候产生减小的offset
+  const minOfffset = useMemo(() => (unuseNum + 1 - list?.length || 0) * itemHeight, [
+    itemHeight,
+    list?.length,
+    unuseNum,
+  ]); // 滑到最下面的偏移量
 
   const [checkedIndex, setCheckedIndex] = useState(0);
 
@@ -101,18 +112,46 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: React.Ref<si
   }));
 
   /** ----------------------------------- DOM ----------------------------------------- */
-
-  const setAniOffset = (divOffSet: number) => {
-    if (comRef.divElement) {
-      comRef.divElement.style.transform = `translateY(${divOffSet}px)`;
-    }
-  };
+  const setAniOffset = useCallback(
+    (divOffSet: number) => {
+      if (comRef.divElement) {
+        comRef.divElement.style.transform = `translateY(${divOffSet}px)`;
+      }
+    },
+    [comRef.divElement]
+  );
 
   /** ----------------------------------- Touch ----------------------------------------- */
+
+  // 设置选中索引，位置修正并返回选中值
+  const setOffSetAndDataBack = useCallback(
+    (position: number, newIndex: number) => {
+      setAniOffset(position);
+      if (checkedIndex !== newIndex) {
+        setCheckedIndex(newIndex);
+        if (done) {
+          done(newIndex, inparindex);
+        }
+      }
+    },
+    [checkedIndex, done, inparindex, setAniOffset]
+  );
+
+  // 拖动结束的时候 计算修正
+  const correctPosition = useCallback(() => {
+    const isPositive = comRef.wrapOffset > 0;
+    let integer: number = Math.round(Math.abs(comRef.wrapOffset / itemHeight));
+    const postion = isPositive ? integer * itemHeight : -1 * integer * itemHeight;
+    const newIndex = Math.abs(postion / itemHeight - unuseNum);
+    comRef.wrapOffset = postion;
+    setOffSetAndDataBack(postion, newIndex);
+  }, [comRef, itemHeight, setOffSetAndDataBack, unuseNum]);
+
   const onStart = (event: React.TouchEvent) => {
     const touchY = event.touches[0].pageY;
     comRef.initOff = touchY;
   };
+
   const onMoving = (event: React.TouchEvent) => {
     const touchY = event.touches[0].pageY;
     const transY = touchY - comRef.initOff + comRef.wrapOffset;
@@ -122,45 +161,26 @@ function SingleSlide(props: ISingleProps = defaultSingleProps, ref: React.Ref<si
     setAniOffset(transY);
   };
 
-  const onMoveEnd = (event: React.TouchEvent) => {
-    const touchY = event.changedTouches[0].pageY;
-    comRef.wrapOffset = comRef.wrapOffset + (touchY - comRef.initOff);
-    if (comRef.wrapOffset > maxOffset) {
-      comRef.wrapOffset = maxOffset;
-      setOffSetAndDataBack(maxOffset, 0);
-      return;
-    }
-    if (comRef.wrapOffset < minOfffset) {
-      comRef.wrapOffset = minOfffset;
-      setOffSetAndDataBack(minOfffset, list.length - 1);
-      return;
-    }
-    correctPosition();
-  };
-
-  // 拖动结束的时候 计算修正
-  const correctPosition = () => {
-    const isPositive = comRef.wrapOffset > 0;
-    let integer: number = Math.round(Math.abs(comRef.wrapOffset / itemHeight));
-    const postion = isPositive ? integer * itemHeight : -1 * integer * itemHeight;
-    const newIndex = Math.abs(postion / itemHeight - unuseNum);
-    comRef.wrapOffset = postion;
-    setOffSetAndDataBack(postion, newIndex);
-  };
-
-  // 设置选中索引，位置修正并返回选中值
-  const setOffSetAndDataBack = (position: number, newIndex: number) => {
-    setAniOffset(position);
-    if (checkedIndex !== newIndex) {
-      setCheckedIndex(newIndex);
-      if (done) {
-        done(newIndex, inparindex);
+  const onMoveEnd = useCallback(
+    (event: React.TouchEvent) => {
+      const touchY = event.changedTouches[0].pageY;
+      comRef.wrapOffset = comRef.wrapOffset + (touchY - comRef.initOff);
+      if (comRef.wrapOffset > maxOffset) {
+        comRef.wrapOffset = maxOffset;
+        setOffSetAndDataBack(maxOffset, 0);
+        return;
       }
-    }
-  };
+      if (comRef.wrapOffset < minOfffset) {
+        comRef.wrapOffset = minOfffset;
+        setOffSetAndDataBack(minOfffset, list.length - 1);
+        return;
+      }
+      correctPosition();
+    },
+    [comRef, correctPosition, list.length, maxOffset, minOfffset, setOffSetAndDataBack]
+  );
 
   /** ----------------------------------- Render ----------------------------------------- */
-
   const maskstyle = {
     width: `${Width}vw`,
     height: unuseNum * itemHeight,
