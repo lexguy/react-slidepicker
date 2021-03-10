@@ -2,7 +2,7 @@
   "name": "react-slidepicker",
   "version": "1.0.3",
   "description": "a react picker component for mobile",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
