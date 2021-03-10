@@ -1,6 +1,6 @@
 {
   "name": "react-slidepicker",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "a react picker component for mobile",
   "main": "index.js",
   "scripts": {

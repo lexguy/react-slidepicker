@@ -1,1 +1,0 @@
-{"version":3,"file":"modal.d.ts","sourceRoot":"","sources":["../../../src/localpicker/src/modal.tsx"],"names":[],"mappings":"AAQA,OAAO,KAAK,EAAE,EAAE,SAAS,EAAE,MAAM,OAAO,CAAC;AAGzC,UAAU,UAAU;IAClB,IAAI,EAAE,OAAO,CAAC;IACd,YAAY,EAAE,KAAK,CAAC,YAAY,CAAC,GAAG,CAAC,CAAC;CACvC;AAED,MAAM,CAAC,OAAO,UAAU,SAAS,CAAC,MAAM,EAAE,OAAO,SAAS,8EAoCzD"}
